@@ -155,97 +155,85 @@ Ans.✅ OAuth allows **secure authentication** without exposing passwords.
     ✅ Tinder never **stores or handles passwords**; Google/Facebook does.  
     ✅ OAuth tokens expire, reducing security risks compared to stored passwords.  
 
----
 
-### **4️⃣ What is JWT (JSON Web Token), and why is it used?**  
-✅ **JWT is a secure way to authenticate users.**  
-✅ It contains **user details (email, profile, permissions, etc.)** inside an encrypted token.  
-✅ Tinder **stores JWT** on the client side and **sends it in every API request** for authentication.  
+Que.4️⃣ What is JWT (JSON Web Token), and why is it used?**  
+Ans.✅ **JWT is a secure way to authenticate users.**  
+    ✅ It contains **user details (email, profile, permissions, etc.)** inside an encrypted token.  
+    ✅ Tinder **stores JWT** on the client side and **sends it in every API request** for authentication.  
 
----
+--------------------------------------
+🔸 Questions on Authentication Flow :  
+--------------------------------------
 
-## **🔸 Questions on Authentication Flow**  
+Que.5️⃣ How does Tinder verify a returning user the next day?**  
+Ans.✅ When a user opens Tinder tomorrow, the app **checks for a stored JWT token**.  
+    ✅ If a token exists, Tinder sends it to the backend to **verify its validity**.  
+    ✅ If the token is valid, Tinder logs in the user automatically.  
+    ✅ If the token is expired or invalid, the user is asked to **log in again**.  
 
-### **5️⃣ How does Tinder verify a returning user the next day?**  
-✅ When a user opens Tinder tomorrow, the app **checks for a stored JWT token**.  
-✅ If a token exists, Tinder sends it to the backend to **verify its validity**.  
-✅ If the token is valid, Tinder logs in the user automatically.  
-✅ If the token is expired or invalid, the user is asked to **log in again**.  
 
----
+Que.6️⃣ Where does Tinder store the JWT token on different devices?**  
+Ans.📌 **Web:** Cookies (with HTTP-only & Secure flags) or Local Storage.  
+    📌 **Mobile Apps (Android/iOS):** Secure Storage (Keychain for iOS, Encrypted Storage for Android).  
 
-### **6️⃣ Where does Tinder store the JWT token on different devices?**  
-📌 **Web:** Cookies (with HTTP-only & Secure flags) or Local Storage.  
-📌 **Mobile Apps (Android/iOS):** Secure Storage (Keychain for iOS, Encrypted Storage for Android).  
 
----
+Que.7️⃣ How does Tinder prevent fake logins with JWT?**  
+Ans.✅ JWT tokens are **signed with a secret key**, preventing modification.  
+    ✅ The backend **verifies JWT signature** before granting access.  
+    ✅ JWT **expiration time** limits how long a token remains valid.  
 
-### **7️⃣ How does Tinder prevent fake logins with JWT?**  
-✅ JWT tokens are **signed with a secret key**, preventing modification.  
-✅ The backend **verifies JWT signature** before granting access.  
-✅ JWT **expiration time** limits how long a token remains valid.  
+Que.8️⃣ How does Tinder handle session management?**  
+Ans.✅ The **Session Service** in Tinder stores session data in **Redis** for fast access.  
+    ✅ If a user logs out, the session is deleted from Redis.  
+    ✅ When a user logs in again, a **new session is created** with a fresh JWT.  
 
----
 
-### **8️⃣ How does Tinder handle session management?**  
-✅ The **Session Service** in Tinder stores session data in **Redis** for fast access.  
-✅ If a user logs out, the session is deleted from Redis.  
-✅ When a user logs in again, a **new session is created** with a fresh JWT.  
+Que.9️⃣ What happens if the JWT token is stolen?**  
+Ans.✅ Attackers can **impersonate** the user if they steal the JWT.  
+    ✅ Tinder mitigates this by:  
+    - Using **short-lived JWTs** (expire quickly).  
+    - Implementing **refresh tokens** for re-authentication.  
+    - Storing JWT in **secure storage** instead of Local Storage.  
 
----
+-------------------------------------------
+🔸 Advanced Questions on OAuth & Security :
+-------------------------------------------
 
-### **9️⃣ What happens if the JWT token is stolen?**  
-✅ Attackers can **impersonate** the user if they steal the JWT.  
-✅ Tinder mitigates this by:  
-   - Using **short-lived JWTs** (expire quickly).  
-   - Implementing **refresh tokens** for re-authentication.  
-   - Storing JWT in **secure storage** instead of Local Storage.  
+Que. 🔟 How does Tinder refresh the login session without re-entering credentials?**  
+Ans. ✅ Tinder **stores a refresh token** (a long-lived secret key).  
+     ✅ When the JWT expires, Tinder uses the **refresh token** to request a **new JWT**.  
+     ✅ This allows **silent re-login** without asking for credentials again.  
 
----
 
-## **🔸 Advanced Questions on OAuth & Security**  
+Que.1️⃣1️⃣ Why is OAuth better than session-based authentication?**  
+Ans.✅ **Scalability** – OAuth **does not rely on server-side sessions**, making it ideal for microservices.  
+    ✅ **Security** – Passwords are never stored; authentication happens via access tokens.  
+    ✅ **Flexibility** – Users can log in using different **identity providers (Google, Facebook, Apple, etc.)**.  
 
-### **🔟 How does Tinder refresh the login session without re-entering credentials?**  
-✅ Tinder **stores a refresh token** (a long-lived secret key).  
-✅ When the JWT expires, Tinder uses the **refresh token** to request a **new JWT**.  
-✅ This allows **silent re-login** without asking for credentials again.  
 
----
+Que.1️⃣2️⃣ How does Tinder prevent brute-force attacks on login?**  
+Ans.✅ **Rate limiting** via API Gateway (**Nginx/Kong**) to block repeated failed login attempts.  
+    ✅ **CAPTCHA verification** if multiple failed attempts occur.  
+    ✅ **Account lockout policy** after too many failed login attempts.  
 
-### **1️⃣1️⃣ Why is OAuth better than session-based authentication?**  
-✅ **Scalability** – OAuth **does not rely on server-side sessions**, making it ideal for microservices.  
-✅ **Security** – Passwords are never stored; authentication happens via access tokens.  
-✅ **Flexibility** – Users can log in using different **identity providers (Google, Facebook, Apple, etc.)**.  
 
----
+Que.1️⃣3️⃣ What if a user logs in from multiple devices?**  
+Ans.✅ Each device gets a **separate session with its own JWT token**.  
+    ✅ Sessions are stored in Redis, so the backend knows all active logins.  
+    ✅ Tinder can **invalidate all sessions** when a user logs out from all devices.  
 
-### **1️⃣2️⃣ How does Tinder prevent brute-force attacks on login?**  
-✅ **Rate limiting** via API Gateway (**Nginx/Kong**) to block repeated failed login attempts.  
-✅ **CAPTCHA verification** if multiple failed attempts occur.  
-✅ **Account lockout policy** after too many failed login attempts.  
 
----
+Que.1️⃣4️⃣ What happens if a user revokes Google/Facebook access?**  
+Ans.✅ Google/Facebook will **invalidate the access token**.  
+    ✅ Tinder will detect this when the user’s token **fails verification**.  
+    ✅ The user will be asked to **log in again** with a new OAuth flow.  
 
-### **1️⃣3️⃣ What if a user logs in from multiple devices?**  
-✅ Each device gets a **separate session with its own JWT token**.  
-✅ Sessions are stored in Redis, so the backend knows all active logins.  
-✅ Tinder can **invalidate all sessions** when a user logs out from all devices.  
 
----
+Que.1️⃣5️⃣ How does Tinder ensure OAuth security?**  
+Ans.✅ Uses **PKCE (Proof Key for Code Exchange)** to prevent token theft.  
+    ✅ Stores OAuth **secrets securely** in environment variables (not hardcoded in code).  
+    ✅ Uses **OAuth scopes** to limit data access (e.g., only fetch email & profile picture).  
 
-### **1️⃣4️⃣ What happens if a user revokes Google/Facebook access?**  
-✅ Google/Facebook will **invalidate the access token**.  
-✅ Tinder will detect this when the user’s token **fails verification**.  
-✅ The user will be asked to **log in again** with a new OAuth flow.  
-
----
-
-### **1️⃣5️⃣ How does Tinder ensure OAuth security?**  
-✅ Uses **PKCE (Proof Key for Code Exchange)** to prevent token theft.  
-✅ Stores OAuth **secrets securely** in environment variables (not hardcoded in code).  
-✅ Uses **OAuth scopes** to limit data access (e.g., only fetch email & profile picture).  
-
----
 
 ## **🔹 Summary of Key Takeaways**  
 
@@ -254,9 +242,6 @@ Ans.✅ OAuth allows **secure authentication** without exposing passwords.
 ✅ **Session Service (Redis)** manages active user sessions.  
 ✅ **API Gateway (Nginx/Kong)** handles authentication, security, and routing.  
 ✅ **Secure Storage** (Keychain, Cookies, LocalStorage) stores tokens safely.  
-
-This covers all possible **interview questions** on **OAuth-based login in Tinder**! 🚀
-
 -->
 
 
