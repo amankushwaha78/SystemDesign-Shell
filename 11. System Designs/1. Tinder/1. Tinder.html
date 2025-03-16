@@ -8,8 +8,103 @@
     d. Matchmaking (when both users like each other)
     e. Chat system for matched users
     f. Discovery feed with recommendations
-    g. Push notifications 
+    g. Push notifications
 
+a. 🔐 Authentication (Signup & Login) :
+---------------------------------------
+    🔹 Do we support third-party authentication (Google, Facebook, Apple)?
+    👉 Yes, OAuth 2.0 is widely used for social logins. 
+        It enhances user convenience but needs security checks (like token validation).
+
+    🔹 How do we handle account recovery & security measures?
+    👉 Typically via email/phone OTPs. 
+        For extra security, we can use 2FA (two-factor authentication).
+
+    🔹 What kind of rate-limiting or bot protection is in place?
+    👉 reCAPTCHA for bot detection,
+        JWT token expiration,
+        and IP-based rate limiting (e.g., max 5 login attempts per minute).
+
+b. 📝 Profile Management (creation and updates) :
+----------------------------------------------
+    🔹 Do we allow users to customize visibility settings?
+    👉 Yes, we can allow users to hide their profile or set preferences (like showing only to nearby users).
+
+    🔹 How do we handle profile image uploads?
+    👉 Usually, we compress images on the frontend and store them in an S3 bucket or Firebase Storage, 
+        with a CDN (like Cloudflare) for faster delivery.
+
+    🔹 What fields are mandatory vs. optional for profile setup?
+    👉 Mandatory: Name, age, gender, location.
+    👉 Optional: Bio, hobbies, social media links.
+
+c. 💖 Swiping & Matchmaking (like/dislike) :
+-------------------------------------------
+    🔹 How do we determine the user feed?
+    👉 AI-driven recommendations using collaborative filtering, geolocation, and user preferences (age, gender, interests).
+
+    🔹 Do we have any anti-spam or fake profile detection?
+    👉 Yes, we can use ML models to detect bots & fake profiles based on user behavior (e.g., too many likes in a short time).
+
+    🔹 How do we handle match expiration?
+    👉 We can expire matches if users don’t chat within 7 days, encouraging faster conversations.
+
+d. 💬 Chat System :
+--------------------
+    🔹 What technology stack is used for real-time messaging?
+    👉 WebSockets for real-time chat, XMPP for peer-to-peer, or Firebase for simplicity.
+
+    🔹 Do we support multimedia messages?
+    👉 Yes, we can use Cloudinary or S3 for image/video storage, with file size limits.
+
+    🔹 How do we ensure message delivery?
+    👉 ACKs (Acknowledgments) for message confirmation, offline storage for unsent messages, and retry mechanisms.
+
+e. 🔎 Discovery & Recommendations :
+----------------------------------
+    🔹 What factors influence recommendations?
+    👉 Geolocation, shared interests, past likes/dislikes, and ML-based behavioral analysis.
+
+    🔹 How do we prevent recommendation bias?
+    👉 By randomizing suggestions and ensuring diversity in the feed.
+
+    🔹 Can users refine recommendations?
+    👉 Yes, we can add filters (age, distance, interests) to improve personalization
+
+f. 📢 Push Notifications :
+--------------------------
+    🔹 Do we use Firebase, SNS, or a custom notification system?
+    👉 Firebase Cloud Messaging (FCM) for mobile push notifications.
+
+    🔹 How do we handle notification preferences?
+    👉 Users can toggle on/off different types of notifications in settings.
+
+    🔹 Do we have re-engagement strategies?
+    👉 Yes! We can send reminders like:
+        "💘 Someone just liked you! Check it out!"
+        "🔥 5 new people near you!"
+
+g. ⚡ Performance, Scaling & Edge Cases :
+-----------------------------------------
+    🔹 How do we handle high traffic spikes?
+    👉 Load balancers (NGINX, AWS ELB) and caching (Redis, Cloudflare) for performance optimization.
+
+    🔹 What’s the approach to data consistency?
+    👉 Event-driven architecture (Kafka, RabbitMQ) ensures smooth data sync across microservices.
+
+    🔹 How do we ensure data privacy & compliance?
+    👉 GDPR & CCPA compliance by allowing users to delete their data anytime and encrypting PII (Personally Identifiable Information).
+
+h. 🎯 Final Wrap-Up :
+------------------
+    🔹 What are the biggest technical challenges?
+    👉 Scalability, real-time performance, and spam prevention are major challenges in a dating app.
+
+    🔹 What improvements are planned for the future?
+    👉 AI-driven match suggestions, voice/video calls, and better content moderation.
+
+    🔹 How does the team collaborate?
+    👉 Agile workflow with sprint planning, daily stand-ups, and code reviews.
 
 
 Tinder System Architecture (Scalable) :
