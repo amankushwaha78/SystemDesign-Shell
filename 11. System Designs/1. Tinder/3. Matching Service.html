@@ -4,6 +4,7 @@
 🔹 Services Involved :  
     ✅ Matching Service(MongoDB) – Manages swipes & match algorithm  
     ✅ Recommendation Service(Neo4j GraphDB) – Suggests potential matches  
+    ✅ Push Notification Service (firebase / SNS / Twilio ) - For real-time alerts
 
 🔹 Flow : 
     1️⃣ User swipes left/right on a profile  
@@ -26,7 +27,8 @@ It integrates AI-based ML algorithms, workers to optimize matchmaking and ensure
 
 2️⃣ Matching Service – Core Functionality :
 ------------------------------------------
-    ✅Microservice Involved:  Matching Service (Handles swipes, match decisions, and compatibility calculations)
+    ✅Microservice Involved:  Matching Service(MongoDB) 
+    -Handles swipes, match decisions, and compatibility calculations)
 
     Process:
     1. Validates User Status:  
@@ -47,7 +49,8 @@ It integrates AI-based ML algorithms, workers to optimize matchmaking and ensure
 
 3️⃣ AI-Based Matchmaking Algorithm :
 -----------------------------------
-    ✅ Microservice Involved:  Recommendation Service (AI-powered matchmaking engine)
+    ✅ Microservice Involved:  Recommendation Service (Neo4j GraphDB)
+    - Our this service is (AI-powered matchmaking engine)
 
     Process:
     1. Graph-Based Matching:  
@@ -68,46 +71,43 @@ It integrates AI-based ML algorithms, workers to optimize matchmaking and ensure
         a. The algorithm assigns a compatibility score to potential matches.
         b. Higher-ranked profiles appear first in the swipe feed.
 
-        
-## 4️⃣ Real-Time Updates & Cache Optimization
-### Microservice Involved:  
-✅ Session Service (Handles real-time matching updates)
 
-### Process:
-1. Uses Redis for Fast Lookup:  
-   - Swipe data is cached in Redis for real-time performance.
-   - If Redis cache misses, it fetches data from **MongoDB (Matches DB)**.
+4️⃣ Real-Time Updates & Cache Optimization :
+-------------------------------------------
+    ✅ Microservice Involved :  Session Service(Redis)
+    - (Handles real-time matching updates)
 
-2. Instant Match Updates:  
-   - When a match is formed, updates are pushed instantly to both users via WebSockets (Chat Service).
+    Process:
+    1. Uses Redis for Fast Lookup:  
+        a. Swipe data is cached in Redis for real-time performance.
+        b. If Redis cache misses, it fetches data from **MongoDB (Matches DB)**.
 
---------------------------------------------------------------------
+    2. Instant Match Updates:  
+       a. When a match is formed, updates are pushed instantly to both users via WebSockets (Chat Service).
 
-## 5️⃣ Handling Edge Cases
-### Microservice Involved:  
-✅ Matching Service
 
-| Scenario | System Handling |
-|-------------|---------------------|
-| One user swipes right, but the other hasn’t yet | Stores action in **MongoDB (Matches DB)** and waits for the second swipe. |
-| One user unmatches the other | Deletes the match record from **MongoDB** and clears cache. |
-| User blocks another user | Blocks the profile in Profile Service, prevents matching. |
-| Fake/bot accounts detected | AI flags suspicious behavior, bans the account. |
+5️⃣ Handling Edge Cases :
+--------------------------
+    ✅ Microservice Involved:  Matching Service (MongoDB)
 
---------------------------------------------------------------------
+    | Scenario                                        |            System Handling                                                |
+    |-------------------------------------------------|---------------------------------------------------------------------------|
+    | One user swipes right, but the other hasn’t yet | Stores action in **MongoDB (Matches DB)** and waits for the second swipe. |
+    | One user unmatches the other                    | Deletes the match record from **MongoDB** and clears cache (Redis).       |
+    | User blocks another user                        | Blocks the profile in **Profile Service**, prevents matching.             |
+    | Fake/bot accounts detected                      | AI flags suspicious behavior, bans the account.                           |
 
-## 6️⃣ Summary of Services & Databases Used
-| Component | Purpose |
-|------------------------|------------|
-| Matching Service | Handles swipe logic, mutual matches |
-| Recommendation Service | AI-powered profile suggestions |
-| Session Service | Real-time match updates via Redis |
-| **MongoDB (Matches DB)** | Stores swipe history and matches |
-| Neo4j / GraphDB | AI-based relationship tracking |
-| Redis (Cache) | Fast lookup for active matches |
-| Push Notification Service | Alerts users when a match occurs |
 
---------------------------------------------------------------------
+6️⃣ Summary of Services & Databases Used :
+-----------------------------------------
+
+| Component                              | Purpose                                                            |
+|----------------------------------------|--------------------------------------------------------------------|
+| Matching Service (MongoDB)             | Handles swipe logic, mutual matches, matches, Stores swipe history |
+| Recommendation Service (Neo4j GraphDB) | AI-based relationship tracking                                     |
+| Session Service (Redis Cache)          | Real-time & Fast lookup for active matches                         |
+| Push Notification Service (Firebase)   | Alerts users when a match occurs                                   |
+
 
 This scalable Matching Service ensures:
 ✅ Real-time swipes & matches  
