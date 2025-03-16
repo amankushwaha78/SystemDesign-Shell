@@ -2,7 +2,7 @@
 ❤️ Swipe & Match Process :
 ---------------------------
 🔹 Services Involved :  
-    ✅ Matching Service(DynamoDB) – Manages swipes & match algorithm  
+    ✅ Matching Service(MongoDB) – Manages swipes & match algorithm  
     ✅ Recommendation Service(Neo4j GraphDB) – Suggests potential matches  
 
 🔹 Flow : 
@@ -11,67 +11,64 @@
     3️⃣ If both users swipe right, a match event is triggered  
     4️⃣ Recommendation Service (powered by AI) suggests new matches based on user preferences (stored in Neo4j GraphDB)  
 
-The Matching Service is responsible for handling user interactions, swipes, and match recommendations in a dating app like Tinder. It integrates AI-based ML algorithms to optimize matchmaking and ensures real-time updates for a seamless user experience.
+The Matching Service is responsible for handling user interactions, swipes, and match recommendations in a dating app like Tinder. 
+It integrates AI-based ML algorithms, workers to optimize matchmaking and ensures real-time updates for a seamless user experience.
 
---------------------------------------------------------------------
 
-## 1️⃣ User Swipes on a Profile
-### Trigger:
-- A user swipes right (like) or left (dislike) on another profile.
+1️⃣ User Swipes on a Profile :
+-----------------------------
+    ✅ Trigger: A user swipes right (like) or left (dislike) on another profile.
 
-### System Flow:
-1. The frontend captures the swipe action and sends it to the API Gateway (Nginx).
-2. The API Gateway forwards the request to the Matching Service.
+    System Flow:
+    1. The frontend captures the swipe action and sends it to the API Gateway (Nginx).
+    2. The API Gateway forwards the request to the Matching Service.
 
---------------------------------------------------------------------
 
-## 2️⃣ Matching Service – Core Functionality
-### Microservice Involved:  
-✅ Matching Service (Handles swipes, match decisions, and compatibility calculations)
+2️⃣ Matching Service – Core Functionality :
+------------------------------------------
+    ✅Microservice Involved:  Matching Service (Handles swipes, match decisions, and compatibility calculations)
 
-### Process:
-1. Validates User Status:  
-   - Ensures both users have active profiles.
-   - Checks for blocked/muted accounts.
+    Process:
+    1. Validates User Status:  
+        a. Ensures both users have active profiles.
+        b. Checks for blocked/muted accounts.
 
-2. Stores Swipe Action in Matches DB:  
-   - The system logs the user's swipe into DynamoDB (Matches DB) for fast retrieval.
+    2. Stores Swipe Action in Matches DB:  
+        a. system logs the user's swipe into **MongoDB (Matches DB)** for fast retrieval.
 
-3. Checks for a Mutual Match:  
-   - If User A has already liked User B, and User B swipes right on User A, it’s a match!
-   - If no mutual like yet, the system waits for the second user's action.
+    3. Checks for a Mutual Match:  
+        a. If User A has already liked User B, and User B swipes right on User A, it’s a match!
+        b. If no mutual like yet, the system waits for the second user's action.
 
-4. Triggers Notification for a Match:  
-   - When a mutual match occurs, the Push Notification Service sends an alert (e.g., Firebase, Twilio).
-   - The app UI updates in real time to show the match.
+    4. Triggers Notification for a Match:  
+        a. When a mutual match occurs, the Push Notification Service sends an alert (e.g., Firebase, Twilio).
+        b. The app UI updates in real time to show the match.
 
---------------------------------------------------------------------
 
-## 3️⃣ AI-Based Matchmaking Algorithm
-### Microservice Involved:  
-✅ Recommendation Service (AI-powered matchmaking engine)
+3️⃣ AI-Based Matchmaking Algorithm :
+-----------------------------------
+    ✅ Microservice Involved:  Recommendation Service (AI-powered matchmaking engine)
 
-### Process:
-1. Graph-Based Matching:  
-   - The system uses Neo4j (GraphDB) to analyze user interactions, preferences, and common interests.
-   - The graph database structures users as nodes and their interactions as edges to find meaningful connections.
+    Process:
+    1. Graph-Based Matching:  
+        a. The system uses Neo4j (GraphDB) to analyze user interactions, preferences, and common interests.
+        b. The graph database structures users as nodes and their interactions as edges to find meaningful connections.
 
-2. Behavior-Based Recommendations:  
-   - AI analyzes previous swipes, conversations, and engagement levels.
-   - Suggests profiles that align with the user's activity patterns.
+    2. Behavior-Based Recommendations:  
+        a. AI analyzes previous swipes, conversations, and engagement levels.
+        b. Suggests profiles that align with the user's activity patterns.
 
-3. Location & Preference Filtering:  
-   - The system applies filters such as:
-     - Location-based filtering (Users in the same city or preferred radius)
-     - Demographics (Age, gender, interests)
-     - Profile attributes (Occupation, hobbies, bio keywords)
+    3. Location & Preference Filtering:  
+       The system applies filters such as:
+        a. Location-based filtering (Users in the same city or preferred radius)
+        b. Demographics (Age, gender, interests)
+        c. Profile attributes (Occupation, hobbies, bio keywords)
 
-4. Ranking & Prioritization:  
-   - The algorithm assigns a compatibility score to potential matches.
-   - Higher-ranked profiles appear first in the swipe feed.
+    4. Ranking & Prioritization:  
+        a. The algorithm assigns a compatibility score to potential matches.
+        b. Higher-ranked profiles appear first in the swipe feed.
 
---------------------------------------------------------------------
-
+        
 ## 4️⃣ Real-Time Updates & Cache Optimization
 ### Microservice Involved:  
 ✅ Session Service (Handles real-time matching updates)
@@ -79,7 +76,7 @@ The Matching Service is responsible for handling user interactions, swipes, and 
 ### Process:
 1. Uses Redis for Fast Lookup:  
    - Swipe data is cached in Redis for real-time performance.
-   - If Redis cache misses, it fetches data from DynamoDB (Matches DB).
+   - If Redis cache misses, it fetches data from **MongoDB (Matches DB)**.
 
 2. Instant Match Updates:  
    - When a match is formed, updates are pushed instantly to both users via WebSockets (Chat Service).
@@ -92,8 +89,8 @@ The Matching Service is responsible for handling user interactions, swipes, and 
 
 | Scenario | System Handling |
 |-------------|---------------------|
-| One user swipes right, but the other hasn’t yet | Stores action in Matches DB and waits for the second swipe. |
-| One user unmatches the other | Deletes the match record from DynamoDB and clears cache. |
+| One user swipes right, but the other hasn’t yet | Stores action in **MongoDB (Matches DB)** and waits for the second swipe. |
+| One user unmatches the other | Deletes the match record from **MongoDB** and clears cache. |
 | User blocks another user | Blocks the profile in Profile Service, prevents matching. |
 | Fake/bot accounts detected | AI flags suspicious behavior, bans the account. |
 
@@ -105,7 +102,7 @@ The Matching Service is responsible for handling user interactions, swipes, and 
 | Matching Service | Handles swipe logic, mutual matches |
 | Recommendation Service | AI-powered profile suggestions |
 | Session Service | Real-time match updates via Redis |
-| DynamoDB (Matches DB) | Stores swipe history and matches |
+| **MongoDB (Matches DB)** | Stores swipe history and matches |
 | Neo4j / GraphDB | AI-based relationship tracking |
 | Redis (Cache) | Fast lookup for active matches |
 | Push Notification Service | Alerts users when a match occurs |
@@ -117,4 +114,18 @@ This scalable Matching Service ensures:
 ✅ AI-powered matchmaking  
 ✅ Optimized database queries  
 ✅ Instant notifications for new matches  
+-->
+
+<!-- 
+
+c. 💖 Swiping & Matchmaking (like/dislike) :
+-------------------------------------------
+    🔹 How do we determine the user feed?
+    👉 AI-driven recommendations using collaborative filtering, geolocation, and user preferences (age, gender, interests).
+
+    🔹 Do we have any anti-spam or fake profile detection?
+    👉 Yes, we can use ML models to detect bots & fake profiles based on user behavior (e.g., too many likes in a short time).
+
+    🔹 How do we handle match expiration?
+    👉 We can expire matches if users don’t chat within 7 days, encouraging faster conversations.
 -->

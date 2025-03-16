@@ -95,7 +95,7 @@ Tinder System Architecture (Scalable) :
             │  └─────────────────────────────┘    └─────────────────────────────┘          │
             │                                                                              │
             │  ┌─────────────────────────────┐    ┌─────────────────────────────┐          │
-            │  │  DynamoDB (Matches DB)      │    │ Cassandra (Chat Messages DB)│          │
+            │  │  MongoDB  (Matches DB)      │    │ Cassandra (Chat Messages DB)│          │
             │  │ (Swipe, Match History)      │    │ (Chats, Message History)    │          │
             │  └─────────────────────────────┘    └─────────────────────────────┘          │
             │                                                                              │
@@ -127,29 +127,6 @@ Tinder System Architecture (Scalable) :
 -->
 
 
-<!-- 
-❤️ 3️⃣ Swipe & Match Process  
-🔹 Services Involved :  
-    ✅ Matching Service – Manages swipes & match algorithm  
-    ✅ Recommendation Service – Suggests potential matches  
-
-🔹 Flow : 
-    1️⃣ User swipes left/right on a profile  
-    2️⃣ The Matching Service records the swipe in DynamoDB (Matches DB)  
-    3️⃣ If both users swipe right, a match event is triggered  
-    4️⃣ Recommendation Service (powered by AI) suggests new matches based on user preferences (stored in Neo4j GraphDB)  
-
-c. 💖 Swiping & Matchmaking (like/dislike) :
--------------------------------------------
-    🔹 How do we determine the user feed?
-    👉 AI-driven recommendations using collaborative filtering, geolocation, and user preferences (age, gender, interests).
-
-    🔹 Do we have any anti-spam or fake profile detection?
-    👉 Yes, we can use ML models to detect bots & fake profiles based on user behavior (e.g., too many likes in a short time).
-
-    🔹 How do we handle match expiration?
-    👉 We can expire matches if users don’t chat within 7 days, encouraging faster conversations.
--->
 
 
 
@@ -246,3 +223,14 @@ d. 💬 Chat System :
 
 This ensures a smooth, fast, and scalable Tinder-like experience! 🚀  
 -->
+
+
+<!-- 
+🔹 Choosing the Right DB Based on Needs
+For high-speed reads/writes & horizontal scaling → Use Cassandra, DynamoDB, or MongoDB
+For complex queries & structured data → Use PostgreSQL or MySQL
+For AI-driven relationship recommendations → Use Neo4j or AWS Neptune (GraphDBs)
+For session management & fast lookups → Use Redis or Memcached
+For chat & real-time messages → Use Cassandra or MongoDB
+For cloud image storage → Use AWS S3, Google Cloud Storage, or MinIO
+ -->
