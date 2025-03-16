@@ -8,7 +8,7 @@
     1️⃣ If a user gets a match or message, a notification event is sent to Kafka  
     2️⃣ Kafka forwards the event to the Push Notification Service  
     3️⃣ The service uses Firebase / Twilio / SNS to send a real-time notification to the user’s device 
-    
+
 
 1️⃣ Push Notifications (Firebase, Twilio, etc.) :
 ------------------------------------------------
@@ -38,4 +38,19 @@
         ✅ Works across devices (mobile, web).  
 
 Both **Push Notifications** and **Kafka Event Processing** work together to ensure **real-time, seamless, and scalable chat messaging.** 🚀  
+-->
+
+<!-- 
+📢 Push Notifications :
+--------------------------
+    🔹 Do we use Firebase, SNS, or a custom notification system?
+    👉 Firebase Cloud Messaging (FCM) for mobile push notifications.
+
+    🔹 How do we handle notification preferences?
+    👉 Users can toggle on/off different types of notifications in settings.
+
+    🔹 Do we have re-engagement strategies?
+    👉 Yes! We can send reminders like:
+        "💘 Someone just liked you! Check it out!"
+        "🔥 5 new people near you!"
 -->

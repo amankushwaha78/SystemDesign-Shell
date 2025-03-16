@@ -2,60 +2,13 @@
 1. System Requirements :
 -----------------------
     Functional Requirements :
-    a. User authentication (sign up, login) :
+    a. Profile Service  - User authentication (sign up, login) :
     b. Profile creation and updates :
     c. Swiping mechanism (like/dislike)
     d. Matchmaking (when both users like each other)
     e. Chat system for matched users
     f. Discovery feed with recommendations
     g. Push notifications
-
-
-e. 🔎 Discovery & Recommendations :
-----------------------------------
-    🔹 What factors influence recommendations?
-    👉 Geolocation, shared interests, past likes/dislikes, and ML-based behavioral analysis.
-
-    🔹 How do we prevent recommendation bias?
-    👉 By randomizing suggestions and ensuring diversity in the feed.
-
-    🔹 Can users refine recommendations?
-    👉 Yes, we can add filters (age, distance, interests) to improve personalization
-
-f. 📢 Push Notifications :
---------------------------
-    🔹 Do we use Firebase, SNS, or a custom notification system?
-    👉 Firebase Cloud Messaging (FCM) for mobile push notifications.
-
-    🔹 How do we handle notification preferences?
-    👉 Users can toggle on/off different types of notifications in settings.
-
-    🔹 Do we have re-engagement strategies?
-    👉 Yes! We can send reminders like:
-        "💘 Someone just liked you! Check it out!"
-        "🔥 5 new people near you!"
-
-g. ⚡ Performance, Scaling & Edge Cases :
------------------------------------------
-    🔹 How do we handle high traffic spikes?
-    👉 Load balancers (NGINX, AWS ELB) and caching (Redis, Cloudflare) for performance optimization.
-
-    🔹 What’s the approach to data consistency?
-    👉 Event-driven architecture (Kafka, RabbitMQ) ensures smooth data sync across microservices.
-
-    🔹 How do we ensure data privacy & compliance?
-    👉 GDPR & CCPA compliance by allowing users to delete their data anytime and encrypting PII (Personally Identifiable Information).
-
-h. 🎯 Final Wrap-Up :
-------------------
-    🔹 What are the biggest technical challenges?
-    👉 Scalability, real-time performance, and spam prevention are major challenges in a dating app.
-
-    🔹 What improvements are planned for the future?
-    👉 AI-driven match suggestions, voice/video calls, and better content moderation.
-
-    🔹 How does the team collaborate?
-    👉 Agile workflow with sprint planning, daily stand-ups, and code reviews.
 
 
 Tinder System Architecture (Scalable) :
@@ -129,44 +82,6 @@ Tinder System Architecture (Scalable) :
 
 
 <!-- 
-🔔 5️⃣ Push Notifications & Event Processing  
-🔹 Services Involved :  
-    ✅ Push Notification Service – Sends notifications (matches, messages)  
-    ✅ Kafka (Event Streaming) – Processes large-scale events  
-
-🔹  Flow : 
-    1️⃣ If a user gets a match or message, a notification event is sent to Kafka  
-    2️⃣ Kafka forwards the event to the Push Notification Service  
-    3️⃣ The service uses Firebase / Twilio / SNS to send a real-time notification to the user’s device  
--->
-
-
-
-<!-- 
-🗂️ 6️⃣ Media Storage & Caching  
-🔹 Services Involved :  
-    ✅ S3 / Cloud Storage – Stores images and media  
-    ✅ Redis – Caches session and chat data  
-
-🔹  Flow : 
-    1️⃣ User profile images, chat media, and other assets are stored in S3  
-    2️⃣ Frequently accessed data (like active sessions & chat history) is cached in Redis for quick retrieval  
--->
-
-
-
-<!-- 
-🧠 7️⃣ AI-Based Moderation & Analytics  
-🔹 Services Involved :  
-    ✅ AI Moderation Service – Scans content for inappropriate material  
-    ✅ Analytics Engine – Tracks user behavior for insights  
-
-🔹  Flow : 
-    1️⃣ Every image & text input passes through AI Moderation for content safety  
-    2️⃣ Analytics Engine processes engagement metrics (swipe rates, matches, chat activity)  
-    3️⃣ Insights help improve matching algorithms & user experience  
-
-
 
 🚀 Final User Journey Summary  
 1️⃣ Login & Session Handling → API Gateway → Profile Service → Session Service  
