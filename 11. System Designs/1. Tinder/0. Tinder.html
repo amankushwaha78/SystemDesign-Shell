@@ -124,38 +124,7 @@ Tinder System Architecture (Scalable) :
             └──────────────────────────────────────────────────────────────────────────────┘
 -------------------------------------------------------------------------------
 -->
-<!--  
-🔑 1️⃣ User Authentication & Profile Creation :
-------------------------------------------------
-🔹 Services Involved:  
-    ✅ API Gateway (Nginx) – Routes requests to the correct microservice  
-    ✅ Profile Service – Manages user authentication and profile creation  
-    ✅ Session Service – Handles user sessions  
 
-🔹 Flow:  
-    1️⃣ User logs in via Mobile/Web app : → API Gateway forwards the request to Profile Service  
-    2️⃣ Profile Service authenticates the user using OAuth/JWT  
-         - If 🆕 new user → prompts profile creation.
-         - If 🏠 existing user → fetches profile data.  
-    3️⃣ Session Service stores session data in Redis for quick authentication.  
-    4️⃣ Upon success, the user gets logged in and redirected to the dashboard. 
-
-
-Q. 🔐 Authentication (Signup & Login) :
----------------------------------------
-    🔹 Do we support third-party authentication (Google, Facebook, Apple)?
-    👉 Yes, OAuth 2.0 is widely used for social logins. 
-        It enhances user convenience but needs security checks (like token validation).
-
-    🔹 How do we handle account recovery & security measures?
-    👉 Typically via email/phone OTPs. 
-        For extra security, we can use 2FA (two-factor authentication).
-
-    🔹 What kind of rate-limiting or bot protection is in place?
-    👉 reCAPTCHA for bot detection,
-        JWT token expiration,
-        and IP-based rate limiting (e.g., max 5 login attempts per minute).
--->
 
 
 

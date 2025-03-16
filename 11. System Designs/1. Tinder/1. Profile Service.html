@@ -1,0 +1,129 @@
+<!--  
+🔑 1️⃣ User Authentication & Profile Creation :
+------------------------------------------------
+🔹 Services Involved:  
+    ✅ API Gateway (Nginx : Reverse Proxy + Load Balancer) – Routes requests to the correct microservice.  
+    ✅ Profile Service – Manages user authentication(OAuth, JWT validation) and profile creation.
+    ✅ Session Service – Handles user sessions.
+
+    📌 Client Requests Flow :-
+    -------------------------
+    1️⃣ Client (Mobile/Web App) → API Gateway (Nginx/Kong)
+        SO First we click login in via Mobile/Web app.
+        DNS converts the Domain name into IP address.
+
+    2️⃣ Than API Gateway forwards the request to Authentication Service (here aka Profile Service).
+        Here we will use Nginx API Gateway.
+        It provides support of "Reverse proxy and Load Balancer".
+
+    2️⃣ Inside Authentication Service (here aka Profile Service) we will use OAuth 2.0 for social logins.
+        The user opens Tinder and clicks on “Continue with Google” / “Continue with Facebook” / “Continue with Apple”.
+        If the user clicks “Continue with Google”, Tinder redirects them to Google’s login page.
+
+        A. The OAuth provider(here Google) authenticates the user and asks for permission:
+                i).  Access to email, profile data.
+                ii). Permission to share data with Tinder.
+           Note : Tinder does not see the password. Only Google (or the chosen provider) handles authentication.
+
+        B. After filling data OAuth provider sends a one-time authorization code to Tinder Backend Server.
+           This is a temporary, one-time code (used only once).
+                 {
+                       "code": "4/yFAGM...dB"               => To Tinder By Google
+                 }
+
+        C. Once Tinder Backend Server receives the Authorization Code from Google.
+           Tinder’s backend sends the code to Google/Facebook with its client credentials (Client ID & Secret).
+                 {
+                        client_id=CLIENT_ID
+                        &client_secret=CLIENT_SECRET
+                        &code=4/yFAGM...dB                  => To Google By Tinder
+                        &grant_type=authorization_code
+                 }
+ 
+         D. Google Again Sends a responds To Tinder Server with an Access Token.
+
+                 {
+                        "access_token": "ya29.a0AR...",     => To Tinder By Google
+                        "id_token": "eyJhbGciOiJIUzI1...",
+                        "expires_in": 3600
+                 }
+
+         E. Tinder validates the received JWT token using its API Gateway.
+            The decoded token contains user details:
+                 {
+                        "sub": "123456789",
+                        "email": "user@gmail.com",
+                        "name": "John Doe",
+                        "picture": "https://profile-pic.jpg"
+                 }
+    
+            Tinder Backend Server stores the JWT token in the database and creates a new session for the user.
+            Tinder Backend Server will send this Token to client Laptop.
+
+         F. Client sends JWT in the Authorization header on every request :
+                  GET /user/profile
+                  Authorization: Bearer <JWT_TOKEN>
+
+            Server verifies JWT using a secret key and grants access.
+            This Access Token is Needed for User Data
+                a. The Access Token is what allows Tinder to fetch user details (like name, email, and profile pic).
+                b. Without it, Tinder cannot authenticate the user properly.
+
+
+    3️⃣ Once Tinder receives a valid JWT token from Google/Facebook/Apple, it must determine whether the user is:
+            🆕 New User → Needs to create a profile
+            🏠 Existing User → Fetches their saved profile 
+
+        a. find Email address from The decoded JWT token :
+              {
+                    "sub": "123456789",
+                    "email": "newuser@gmail.com",
+                    "name": "John Doe",
+                    "picture": "https://profile-pic.jpg"
+              }
+        b. Tinder queries the database to check if the email exists.
+           SELECT * FROM users WHERE email = 'aman@gmail.com';
+
+           If no match found, it's a new user :
+           ----------------------------------
+           i). Redirect to Profile Creation Page :
+               Tinder UI inputs the user to set up their profile:
+                ✅ Name
+                ✅ Profile Picture
+                ✅ Gender & Preferences
+                ✅ Location
+
+           If found, it’s an existing user :
+           ----------------------------------
+           i). Tinder retrieves the profile and sends it back to the frontend.
+              {
+                "name": "Alice Smith",
+                "profile_pic": "https://profile-pic.jpg",
+                "bio": "Love adventures ❤️",
+                "preferences": { "age_range": "21-30", "gender": "Male" }
+               }
+
+    3️⃣ Upon success, the user gets logged in and redirected to the dashboard.
+    4️⃣ Session Service stores session data in Redis for quick authentication.   
+    5️⃣ Microservices send response → API Gateway → Client
+-->  
+
+
+
+
+<!--
+Q. 🔐 Authentication (Signup & Login) :
+---------------------------------------
+    🔹 Do we support third-party authentication (Google, Facebook, Apple)?
+    👉 Yes, OAuth 2.0 is widely used for social logins. 
+        It enhances user convenience but needs security checks (like token validation).
+
+    🔹 How do we handle account recovery & security measures?
+    👉 Typically via email/phone OTPs. 
+        For extra security, we can use 2FA (two-factor authentication).
+
+    🔹 What kind of rate-limiting or bot protection is in place?
+    👉 reCAPTCHA for bot detection,
+        JWT token expiration,
+        and IP-based rate limiting (e.g., max 5 login attempts per minute).
+-->
