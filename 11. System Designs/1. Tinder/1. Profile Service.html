@@ -96,7 +96,7 @@
            If found, it’s an existing user :
            ----------------------------------
            i). Tinder retrieves the profile and sends it back to the frontend.
-              {
+               {
                 "name": "Alice Smith",
                 "profile_pic": "https://profile-pic.jpg",
                 "bio": "Love adventures ❤️",
@@ -104,7 +104,19 @@
                }
 
     3️⃣ Upon success, the user gets logged in and redirected to the dashboard.
-    4️⃣ Session Service stores session data in Redis for quick authentication.   
+    4️⃣ Session Service stores session data (it also saves its Token ) in "Redis" for quick authentication.
+        Ques :What Happens When a User Returns to Tinder the Next Day?
+        Ans : Step 1: Check for an Existing JWT Token :
+                      a. Local Storage (Web)
+                      b. Secure Storage (AsyncStorage, Keychain, etc.) (Mobile)
+                      c. Cookies (For web sessions with HTTP-only cookies)
+
+              Step 2 : If a token exists, the app sends it to the backend for verification:
+                      🔹 Backend verifies:
+                      a. Token is not expired
+                      b. Token signature is valid
+                      c. User exists in the database
+          
     5️⃣ Microservices send response → API Gateway → Client
 -->  
 
