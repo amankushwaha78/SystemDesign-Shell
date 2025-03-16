@@ -11,28 +11,6 @@
     g. Push notifications
 
 
-c. 💖 Swiping & Matchmaking (like/dislike) :
--------------------------------------------
-    🔹 How do we determine the user feed?
-    👉 AI-driven recommendations using collaborative filtering, geolocation, and user preferences (age, gender, interests).
-
-    🔹 Do we have any anti-spam or fake profile detection?
-    👉 Yes, we can use ML models to detect bots & fake profiles based on user behavior (e.g., too many likes in a short time).
-
-    🔹 How do we handle match expiration?
-    👉 We can expire matches if users don’t chat within 7 days, encouraging faster conversations.
-
-d. 💬 Chat System :
---------------------
-    🔹 What technology stack is used for real-time messaging?
-    👉 WebSockets for real-time chat, XMPP for peer-to-peer, or Firebase for simplicity.
-
-    🔹 Do we support multimedia messages?
-    👉 Yes, we can use Cloudinary or S3 for image/video storage, with file size limits.
-
-    🔹 How do we ensure message delivery?
-    👉 ACKs (Acknowledgments) for message confirmation, offline storage for unsent messages, and retry mechanisms.
-
 e. 🔎 Discovery & Recommendations :
 ----------------------------------
     🔹 What factors influence recommendations?
@@ -221,6 +199,17 @@ Q. 📝 Profile Management (creation and updates) :
     2️⃣ The Matching Service records the swipe in DynamoDB (Matches DB)  
     3️⃣ If both users swipe right, a match event is triggered  
     4️⃣ Recommendation Service (powered by AI) suggests new matches based on user preferences (stored in Neo4j GraphDB)  
+
+c. 💖 Swiping & Matchmaking (like/dislike) :
+-------------------------------------------
+    🔹 How do we determine the user feed?
+    👉 AI-driven recommendations using collaborative filtering, geolocation, and user preferences (age, gender, interests).
+
+    🔹 Do we have any anti-spam or fake profile detection?
+    👉 Yes, we can use ML models to detect bots & fake profiles based on user behavior (e.g., too many likes in a short time).
+
+    🔹 How do we handle match expiration?
+    👉 We can expire matches if users don’t chat within 7 days, encouraging faster conversations.
 -->
 
 
@@ -251,6 +240,17 @@ Q. 📝 Profile Management (creation and updates) :
 
     3️⃣ Chats are stored in Cassandra (Chat Messages DB) for quick retrieval  
     4️⃣ The Session Service maintains an active user session, ensuring users receive messages instantly  
+
+d. 💬 Chat System :
+--------------------
+    🔹 What technology stack is used for real-time messaging?
+    👉 WebSockets for real-time chat, XMPP for peer-to-peer, or Firebase for simplicity.
+
+    🔹 Do we support multimedia messages?
+    👉 Yes, we can use Cloudinary or S3 for image/video storage, with file size limits.
+
+    🔹 How do we ensure message delivery?
+    👉 ACKs (Acknowledgments) for message confirmation, offline storage for unsent messages, and retry mechanisms.
 -->
 
 
