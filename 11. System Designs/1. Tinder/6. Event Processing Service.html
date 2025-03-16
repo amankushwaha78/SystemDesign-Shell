@@ -1,0 +1,32 @@
+<!-- 
+Event Processing (Kafka) :
+-----------------------------
+    🔹 Purpose: Handles real-time events related to message status (sent, delivered, seen), analytics, and notifications.  
+    🔹 Service Used: **Kafka (Event Streaming Platform)**  
+
+    How It Works:
+    1️⃣ User A Sends a Message :
+        a. The **Chat Service** stores the message in Cassandra.  
+        b. A **Kafka event ("message_sent")** is triggered and published to the Kafka message queue.
+
+    2️⃣ User B Receives the Message :
+        a. The **Chat Service** updates the message status to **"delivered"** and triggers a Kafka event (`message_delivered`).  
+        b. If User B reads the message, another event (`message_seen`) is generated.
+
+    3️⃣ Kafka Streams Events to Services : 
+        Event listeners (microservices) consume these Kafka events for different purposes:  
+            a. Updating UI: Frontend listens for real-time status updates.  
+            b. Analytics & Logging : Logs chat activity for insights. 
+            ================================================================================ 
+            c. Push Notifications : If User B is offline, push notifications are triggered.  
+            ================================================================================
+               |
+               |---- > here Notification Service is required.
+
+🔹 Why Use Kafka for Event Processing? :
+----------------------------------------
+✅ Asynchronous & Fast : No blocking calls; events are processed in real-time.  
+✅ Scalability : Can handle millions of messages per second.  
+✅ Decouples Services : Chat, notifications, and analytics work independently.  
+
+-->

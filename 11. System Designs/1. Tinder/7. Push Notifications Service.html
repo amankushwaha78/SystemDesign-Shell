@@ -1,0 +1,41 @@
+<!-- 
+🔔 5️⃣ Push Notifications & Event Processing  
+🔹 Services Involved :  
+    ✅ Push Notification Service – Sends notifications (matches, messages)  
+    ✅ Kafka (Event Streaming) – Processes large-scale events  
+
+🔹  Flow : 
+    1️⃣ If a user gets a match or message, a notification event is sent to Kafka  
+    2️⃣ Kafka forwards the event to the Push Notification Service  
+    3️⃣ The service uses Firebase / Twilio / SNS to send a real-time notification to the user’s device 
+    
+
+1️⃣ Push Notifications (Firebase, Twilio, etc.) :
+------------------------------------------------
+     a. **Purpose:** Notify users about unread messages when they are offline.  
+     b. **Service Used:** Firebase Cloud Messaging (FCM), Twilio, or other push notification services.
+
+     How It Works:
+    1️⃣ User B is Offline : 
+         a. When User A sends a message to User B, but **User B is offline**, the chat service **stores the message** in the database (Cassandra).  
+         b. The **Session Service (Redis)** checks if User B is active or not.  
+         c. If offline, the chat system triggers a **push notification request** to Firebase/Twilio.
+
+    2️⃣ Triggering the Push Notification :
+        a. The **Push Notification Service** (Firebase, Twilio) sends a notification to User B’s **registered device tokens**.  
+           Example:  
+            - "You have a new message from User A!"
+            - "💬 Alex sent you a message. Tap to reply!"
+
+        b. User B Opens the App**  
+            i).  The app **connects to the chat service via WebSockets/XMPP** and fetches unread messages.  
+            ii). Messages stored in **Redis (cache)** are delivered instantly.
+
+    🔹Benefits of Push Notifications:
+    ---------------------------------
+        ✅ Ensures users **don’t miss** messages even if they are offline.  
+        ✅ Reduces **server load** since the app doesn’t need to keep polling for new messages.  
+        ✅ Works across devices (mobile, web).  
+
+Both **Push Notifications** and **Kafka Event Processing** work together to ensure **real-time, seamless, and scalable chat messaging.** 🚀  
+-->
