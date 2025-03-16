@@ -71,7 +71,7 @@
 3️⃣ Storing Messages in Cassandra  :
 -----------------------------------
     ✅ Microservice Involved: Chat Service(Cassandra)
-    
+
     a. Messages are **stored in Cassandra** for quick retrieval.
        Each message entry has:
         - `message_id`
@@ -86,33 +86,48 @@
          b. Messages are **indexed by user ID** for quick lookup.
 
 
-### **4️⃣ Message Status Updates (Delivered, Seen, Read)**
-- When User B **receives** the message, the chat service updates the status to **"delivered"**.
-- When User B **reads** the message, the status is updated to **"seen"**.
-- This status update is streamed via **Kafka** for analytics & tracking.
+4️⃣ Message Status Updates (Delivered, Seen, Read) :
+--------------------------------------------------
+    ✅ Microservice Involved: Chat Service(Cassandra), Kafka (Event Processing).
 
----
+    a. When User B **receives** the message, the chat service updates the status to **"delivered"**.
+    b. When User B **reads** the message, the status is updated to **"seen"**.
+    c. This status update is streamed via **Kafka** for analytics & tracking.
 
-### **5️⃣ Handling Offline Messages & Push Notifications**
-- If User B is offline:
-  - The message is **stored in Redis (Cache DB)** for quick delivery upon reconnection.
-  - A **push notification (Firebase, Twilio)** is sent to notify them.
-- When User B comes back online:
-  - The chat history is **fetched from Cassandra**, and all pending messages are delivered.
 
----
+5️⃣ Handling Offline Messages & Push Notifications :
+---------------------------------------------------
+    ✅ Microservice Involved: Chat Service(Casandra), Session Service (Redis (Cache DB)), 
+                               Push Notification Service (Firebase, Twilio)   
 
-## **🔹 Summary of Chat Service Benefits**
-✅ **Real-time Messaging:** WebSockets ensure instant message delivery.  
-✅ **Scalability:** Cassandra & Redis handle high volumes of chat messages.  
-✅ **Low Latency:** Persistent connections prevent request-response delays.  
-✅ **Efficient Storage:** Messages are stored in a scalable NoSQL DB (Cassandra).  
-✅ **Offline Support:** Unread messages are cached & push notifications are sent.  
+    a. If User B is offline:
+       The message is **stored in Redis (Cache DB)** for quick delivery upon reconnection.
+    b. A **push notification (Firebase, Twilio)** is sent to notify them.
+        - When User B comes back online:
+        - The chat history is **fetched from Redis**, and all pending messages are delivered.
+
+
+6️⃣ Summary of Services & Databases Used :
+-----------------------------------------
+✅ Chat Service (Cassandra) – Stores and manages real-time chat messages.  
+✅ Session Service (Redis) – Tracks active user sessions for quick lookups.  
+✅ Push Notification Service (Firebase, Twilio) – Sends alerts for unread messages. 
+✅ Kafka (Event Processing) – Streams message status updates (delivered, seen, read).
+
+✅ WebSockets/XMPP – Enables real-time, low-latency communication.  
+✅ Cassandra (Chat DB) – Stores chat messages efficiently for high-throughput retrieval.  
+✅ Redis (Cache DB) – Temporarily caches messages for offline users.  
+
+
+🔹 Summary of Chat Service Benefits :
+✅ Real-time Messaging: WebSockets ensure instant message delivery.  
+✅ Scalability: Cassandra & Redis handle high volumes of chat messages.  
+✅ Low Latency: Persistent connections prevent request-response delays.  
+✅ Efficient Storage: Messages are stored in a scalable NoSQL DB (Cassandra).  
+✅ Offline Support: Unread messages are cached & push notifications are sent.  
 
 This architecture ensures that **chats are fast, reliable, and scalable**, providing a seamless experience for users. 🚀
 -->
-
-
 
 
 
