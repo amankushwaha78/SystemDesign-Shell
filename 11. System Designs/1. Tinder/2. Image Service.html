@@ -1,0 +1,152 @@
+<!--
+Profile Customization & Image Upload : –
+-------------------------------------
+🔹 Services Involved:  
+    ✅ Profile Service (PostgreSQL)– Stores user info (name, age, bio, etc.)  
+    ✅ Image Service (S3) – Uploads and processes profile pictures.
+    ✅ Session Service (Redis - Cache DB) - For Quick Access.  
+
+🔹 Flow: 
+    1️⃣ User uploads a profile picture  
+    2️⃣ Image Service processes and stores the image in S3/Cloud CDN for fast access  
+    3️⃣ Profile is saved in PostgreSQL (Profile DB)  
+    4️⃣ The app fetches the updated profile and shows it to the user
+
+
+1️⃣ User Trigger / Initiates Profile Update :
+--------------------------------------------
+    A user updates their profile information (e.g., name, age, bio) or profile picture via the mobile/web app.
+
+    System Flow:
+    1. The frontend collects the updated profile data.
+    2. If an image is need to be uploaded, it is first compressed and resized on the client-side.
+    3. The app sends a request to the API Gateway (Nginx), which forwards it to the relevant microservices:
+        i).  Profile Service (for text-based profile updates)
+        ii). Image Service (for profile picture uploads)
+
+
+2️⃣ Profile Data Update Handling :
+--------------------------------
+    ✅ Microservice Involved:  Profile Service (Handles user profile storage and updates)
+
+    Process:
+    1. The Profile Service validates the request (e.g., required fields like name, age, and gender).  
+    2. If valid, the profile details are stored in PostgreSQL (Profile DB).  
+    3. The updated profile is cached in Redis(Session Service) for quick access.  
+
+    Mandatory vs. Optional Fields in Profile Setup :
+    | Field       | Mandatory? |
+    |-------------|------------|
+    | Name        | ✅ Yes    |
+    | Age         | ✅ Yes    |
+    | Gender      | ✅ Yes    |
+    | Location    | ✅ Yes    |
+    | Bio         | ❌ Optional |
+    | Hobbies     | ❌ Optional |
+    | Social Links| ❌ Optional |
+
+
+3️⃣ Image Upload Handling :
+--------------------------
+    ✅ Microservice Involved: Image Service (Handles profile picture processing and storage)
+
+    Process:
+    1. The Image Service receives the image from the frontend.
+    2. The system validates the file type (JPEG, PNG, WebP, etc.).
+    3. If the image is valid, it is:
+        - Compressed and resized for optimization.
+        - Given a unique filename (to avoid duplication).
+    4. The processed image is uploaded to S3 / Cloud Storage.
+    5. A CDN (e.g., Cloudflare) is used to ensure faster image delivery.
+    6. The Image URL is saved in the Profile Service (PostgreSQL) and associated with the user.
+
+
+4️⃣ Cache Update for Fast Retrieval :
+------------------------------------
+    ✅ Microservice Involved:  Session Service - Redis (Cache DB)  
+
+    Process:
+    1. The updated profile (including the new image URL) is stored in Redis for quick lookups.
+    2. This reduces the need to query PostgreSQL every time a user requests profile details.
+
+
+5️⃣ Profile Fetch & UI Update :
+---------------------------------
+    ✅ Microservice Involved:  [Session Service(Redis) / Profile Service(PostgreSQL)] + Image Service(s3) 
+
+    Process:
+    1. When the user opens the app or refreshes their profile, the frontend:
+        - Fetches profile details from Redis Cache (or PostgreSQL if not cached).
+        - Loads the profile image from S3 / Cloud CDN.
+    2. The updated profile is displayed instantly on the user's screen.
+
+
+6️⃣ Profile Visibility & Privacy Settings :
+------------------------------------------
+    ✅ Microservice Involved:  Profile Service  
+
+    Options Available:
+    a. Public: Profile visible to all users.
+    b. Private: Profile visible only to matched users.
+    c. Location-Based: Profile visible only to nearby users.
+
+    Process:
+    1. Users can update visibility settings in their profile.
+    2. The system stores this preference in the Profile Service (PostgreSQL).
+    3. The Matching Service follows these rules when showing profiles to other users.
+
+
+7️⃣ Additional Features & Considerations :
+-----------------------------------------
+    ✅ A AI-Based Moderation - AI Moderation Service  
+       An AI model can analyze uploaded images for inappropriate content before saving.
+        Workflow:  
+        1. Image uploaded → Sent to AI Model  
+        2. AI scans for policy violations  
+        3. If flagged, image is rejected; otherwise, it is stored in S3.
+
+    B. Background Processing & Scalability
+    ✅ Kafka (Event Streaming) :
+        a. Why?  :Profile updates and image uploads generate many events.  
+        b. Solution: Kafka queues tasks asynchronously (e.g., image processing, notifications).
+                         It Handles background tasks asynchronously
+
+
+8️⃣ Summary of Services & Databases Used :
+------------------------------------------
+| Component                    | Purpose |
+|------------------------------|---------|
+| Profile Service              | Stores user profile details in PostgreSQL |
+| Image Service                | Handles image uploads, stores them in S3 |
+| Session Service Redis (Cache)| Caches user profiles for faster access |
+  Other (Not needed) -
+| Kafka                        | Handles background tasks asynchronously |
+| AI Moderation                | Scans profile images for violations |
+-->
+
+
+<!--
+This scalable architecture ensures:
+✅ Fast profile updates  
+✅ Optimized image storage  
+✅ Real-time caching  
+✅ Security & privacy controls  
+
+✅ Auto-Scaling  
+   Image Service and Profile Service scale dynamically based on user demand.
+-->
+
+
+<!-- 
+Q. 📝 Profile Management (creation and updates) :
+-------------------------------------------------
+    🔹 Do we allow users to customize visibility settings?
+    👉 Yes, we can allow users to hide their profile or set preferences (like showing only to nearby users).
+
+    🔹 How do we handle profile image uploads?
+    👉 Usually, we compress images on the frontend and store them in an S3 bucket or Firebase Storage, 
+        with a CDN (like Cloudflare) for faster delivery.
+
+    🔹 What fields are mandatory vs. optional for profile setup?
+    👉 Mandatory: Name, age, gender, location.
+    👉 Optional: Bio, hobbies, social media links. -->
