@@ -10,33 +10,6 @@
     f. Discovery feed with recommendations
     g. Push notifications
 
-a. 🔐 Authentication (Signup & Login) :
----------------------------------------
-    🔹 Do we support third-party authentication (Google, Facebook, Apple)?
-    👉 Yes, OAuth 2.0 is widely used for social logins. 
-        It enhances user convenience but needs security checks (like token validation).
-
-    🔹 How do we handle account recovery & security measures?
-    👉 Typically via email/phone OTPs. 
-        For extra security, we can use 2FA (two-factor authentication).
-
-    🔹 What kind of rate-limiting or bot protection is in place?
-    👉 reCAPTCHA for bot detection,
-        JWT token expiration,
-        and IP-based rate limiting (e.g., max 5 login attempts per minute).
-
-b. 📝 Profile Management (creation and updates) :
-----------------------------------------------
-    🔹 Do we allow users to customize visibility settings?
-    👉 Yes, we can allow users to hide their profile or set preferences (like showing only to nearby users).
-
-    🔹 How do we handle profile image uploads?
-    👉 Usually, we compress images on the frontend and store them in an S3 bucket or Firebase Storage, 
-        with a CDN (like Cloudflare) for faster delivery.
-
-    🔹 What fields are mandatory vs. optional for profile setup?
-    👉 Mandatory: Name, age, gender, location.
-    👉 Optional: Bio, hobbies, social media links.
 
 c. 💖 Swiping & Matchmaking (like/dislike) :
 -------------------------------------------
@@ -188,8 +161,23 @@ Tinder System Architecture (Scalable) :
          - If 🏠 existing user → fetches profile data.  
     3️⃣ Session Service stores session data in Redis for quick authentication.  
     4️⃣ Upon success, the user gets logged in and redirected to the dashboard. 
--->
 
+
+Q. 🔐 Authentication (Signup & Login) :
+---------------------------------------
+    🔹 Do we support third-party authentication (Google, Facebook, Apple)?
+    👉 Yes, OAuth 2.0 is widely used for social logins. 
+        It enhances user convenience but needs security checks (like token validation).
+
+    🔹 How do we handle account recovery & security measures?
+    👉 Typically via email/phone OTPs. 
+        For extra security, we can use 2FA (two-factor authentication).
+
+    🔹 What kind of rate-limiting or bot protection is in place?
+    👉 reCAPTCHA for bot detection,
+        JWT token expiration,
+        and IP-based rate limiting (e.g., max 5 login attempts per minute).
+-->
 
 
 
@@ -205,6 +193,19 @@ Tinder System Architecture (Scalable) :
     2️⃣ Image Service processes and stores the image in S3/Cloud CDN for fast access  
     3️⃣ Profile is saved in PostgreSQL (Profile DB)  
     4️⃣ The app fetches the updated profile and shows it to the user  
+
+Q. 📝 Profile Management (creation and updates) :
+-------------------------------------------------
+    🔹 Do we allow users to customize visibility settings?
+    👉 Yes, we can allow users to hide their profile or set preferences (like showing only to nearby users).
+
+    🔹 How do we handle profile image uploads?
+    👉 Usually, we compress images on the frontend and store them in an S3 bucket or Firebase Storage, 
+        with a CDN (like Cloudflare) for faster delivery.
+
+    🔹 What fields are mandatory vs. optional for profile setup?
+    👉 Mandatory: Name, age, gender, location.
+    👉 Optional: Bio, hobbies, social media links.
 -->
 
 
