@@ -128,50 +128,6 @@ Tinder System Architecture (Scalable) :
 
 
 
-
-
-<!-- 
-💬 4️⃣ Real-time Chat & Messaging  
-🔹 Services Involved :  
-    ✅ Chat Service – Handles messaging between matched users  
-    ✅ Session Service – Keeps track of active chat sessions  
-
-🔹  Flow : 
-    1️⃣ When users match, a chat session is created in Cassandra (Chat DB)  
-    2️⃣ Messages are sent in real-time using WebSockets (via Chat Service)  
-        Ques. Why we uses Peer-to-Peer commination(XMPP) not Client-server communication(HTTP) for chatting ? 
-        ANs. 🔴 High Latency Due to Request-Response Model :
-             -----------------------------------------------
-                 a. Every time a message is sent, the client has to make a request (HTTP POST /sendMessage).
-                 b. The server processes it, stores it, and responds back.
-                 c. This causes delays in real-time messaging.
-                 
-        💡 Example Issue: If two people chat, they must wait for each other's HTTP requests, causing slow message updates.
-
-            ✅ Why Peer-to-Peer (XMPP) is Better for Chatting?
-            --------------------------------------------------
-                 a. ⚡ Instant Message Delivery (Real-Time Push) : Server automatically push messages to client.
-                 b. XMPP uses a single TCP/WebSocket connection for two-way communication.
-                 c. No need for repeated HTTP requests—messages arrive instantly.
-
-    3️⃣ Chats are stored in Cassandra (Chat Messages DB) for quick retrieval  
-    4️⃣ The Session Service maintains an active user session, ensuring users receive messages instantly  
-
-d. 💬 Chat System :
---------------------
-    🔹 What technology stack is used for real-time messaging?
-    👉 WebSockets for real-time chat, XMPP for peer-to-peer, or Firebase for simplicity.
-
-    🔹 Do we support multimedia messages?
-    👉 Yes, we can use Cloudinary or S3 for image/video storage, with file size limits.
-
-    🔹 How do we ensure message delivery?
-    👉 ACKs (Acknowledgments) for message confirmation, offline storage for unsent messages, and retry mechanisms.
--->
-
-
-
-
 <!-- 
 🔔 5️⃣ Push Notifications & Event Processing  
 🔹 Services Involved :  
