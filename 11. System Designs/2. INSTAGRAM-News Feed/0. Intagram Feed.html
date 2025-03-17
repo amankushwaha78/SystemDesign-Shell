@@ -130,6 +130,7 @@ By leveraging caching, event-driven architecture, and AI, it ensures a smooth us
     │   ┌────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐│
     │   │  User Service          │     │  Post Service          │     │  Engagement Service    ││
     │   │  (Profiles, Auth)      │     │  (Upload, Media)       │     │  (Likes, Comments)     ││
+    │   │  [OAuth, JWT]          │     │  [Cloudinary, S3]      │     │  [MySQL Triggers]      ││
     │   │                        │     │                        │     │                        ││
     │   │  ┌──────────────────┐  │     │  ┌──────────────────┐  │     │  ┌──────────────────┐  ││
     │   │  │  PostgreSQL      │  │     │  │  MongoDB         │  │     │  │  MySQL           │  ││
@@ -139,6 +140,7 @@ By leveraging caching, event-driven architecture, and AI, it ensures a smooth us
     │   ┌────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐│
     │   │  Follower Service      │     │  Feed Service          │     │  Recommendation Service││
     │   │  (Follow/Unfollow)     │     │  (News Aggregation)    │     │  (AI-based Ranking)    ││
+    │   │  [Graph Algorithms]    │     │  [Kafka, Spark]        │     │  [ML, TensorFlow]      ││
     │   │                        │     │                        │     │                        ││
     │   │  ┌──────────────────┐  │     │  ┌──────────────────┐  │     │  ┌──────────────────┐  ││
     │   │  │  Neo4j           │  │     │  │  Cassandra       │  │     │  │  Neo4j           │  ││
@@ -148,6 +150,7 @@ By leveraging caching, event-driven architecture, and AI, it ensures a smooth us
     │   ┌────────────────────────┐                                                              │
     │   │  Cache Service         │                                                              │
     │   │  (Fast Retrieval)      │                                                              │
+    │   │  [Redis Clustering]    │                                                              │
     │   │                        │                                                              │
     │   │  ┌──────────────────┐  │                                                              │
     │   │  │  Redis           │  │                                                              │
@@ -157,7 +160,7 @@ By leveraging caching, event-driven architecture, and AI, it ensures a smooth us
     └───────────────────────────────────────────────────────────────────────────────────────────┘
                                             ⬇
     ┌───────────────────────────────────────────────────────────────────────────────────────────┐
-    │                            Background Processing & Event Handling                         │
+    │                                  Background Processing & Event Handling                   │
     ├───────────────────────────────────────────────────────────────────────────────────────────┤
     │                                                                                           │
     │   ┌───────────────────────────────────────────────────────────────────────────────────┐   │
@@ -167,6 +170,7 @@ By leveraging caching, event-driven architecture, and AI, it ensures a smooth us
     │   ┌─────────────────────────────┐     ┌──────────────────────────────┐                    │
     │   │ AI Moderation Service       │     │  Analytics Engine            │                    │
     │   │ (Content filtering, Safety) │     │ (User behavior insights)     │                    │
+    │   │ [OpenAI API, TensorFlow]    │     │ [BigQuery, Apache Flink]     │                    │
     │   └─────────────────────────────┘     └──────────────────────────────┘                    │
     │                                                                                           │
     └───────────────────────────────────────────────────────────────────────────────────────────┘
@@ -175,12 +179,12 @@ By leveraging caching, event-driven architecture, and AI, it ensures a smooth us
     │                                   Push Notification Service                               │
     ├───────────────────────────────────────────────────────────────────────────────────────────┤
     │                                                                                           │
-    │   ┌───────────────────────────┐     ┌──────────────────────────-─┐                        │
+    │   ┌───────────────────────────┐     ┌───────────────────────-────┐                        │
     │   │ Firebase Cloud Messaging  │     │  Amazon SNS / Twilio       │                        │
     │   │ (Mobile notifications)    │     │  (SMS & Push notifications)│                        │
+    │   │ [WebSockets, Pub/Sub]     │     │ [Lambda Functions]         │                        │
     │   └───────────────────────────┘     └────────────────────────-───┘                        │
     │                                                                                           │
     └───────────────────────────────────────────────────────────────────────────────────────────┘
 
-   
     -->
