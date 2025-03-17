@@ -1,0 +1,174 @@
+<!-- 
+
+📚 1. User Service (Authentication & Profile Management)
+
+📝 Q1: How does WhatsApp handle user authentication?
+A1: WhatsApp uses OAuth and JWT (JSON Web Token) for authentication. 
+Users sign up using their phone number, and a one-time password (OTP) 
+is sent via SMS for verification. JWT is used for maintaining session validity.
+
+📝 Q2: Why is PostgreSQL used for storing user profiles?
+A2: PostgreSQL is a relational database that supports ACID transactions, 
+ensuring data consistency and structured storage for user profiles, 
+including name, phone number, and preferences.
+
+📝 Q3: How can user sessions be secured against token hijacking?
+A3: JWT tokens should be short-lived and refreshed securely using 
+refresh tokens. Implementing HSTS, SameSite cookies, and 
+multi-factor authentication (MFA) can also improve security.
+
+---
+
+💬 2. Messaging Service (Real-time Chat)
+
+📝 Q4: How does WhatsApp achieve real-time messaging?
+A4: WhatsApp uses WebSockets and gRPC for bidirectional 
+communication between clients and servers, allowing instant message delivery.
+
+📝 Q5: Why does WhatsApp use Cassandra for storing chat history?
+A5: Cassandra is a NoSQL database optimized for high write scalability 
+and replication across data centers, ensuring messages are stored reliably.
+
+📝 Q6: How does WhatsApp ensure message ordering in a distributed system?
+A6: WhatsApp assigns timestamps and uses logical clocks (Lamport timestamps) 
+to maintain message order across multiple servers.
+
+---
+
+🤝 3. Group Chat Service (Managing Group Conversations)
+
+📝 Q7: How are group messages handled differently from one-on-one messages?
+A7: Group messages are fan-out messages sent to multiple recipients. 
+WhatsApp optimizes this using DynamoDB to store group metadata 
+and event-driven architectures to notify members.
+
+📝 Q8: How does WhatsApp handle admin privileges in a group?
+A8: Admin controls (adding/removing users, changing permissions) 
+are stored in DynamoDB and updated through event-driven mechanisms (e.g., Kafka).
+
+---
+
+🎥 4. Media Service (Images, Videos, and Documents)
+
+📝 Q9: Where does WhatsApp store media files?
+A9: Media files are stored in AWS S3 with a CDN (Content Delivery Network) 
+for fast access and load balancing.
+
+📝 Q10: How does WhatsApp ensure media security?
+A10: WhatsApp uses end-to-end encryption (E2EE) via the Signal Protocol, 
+ensuring only sender and receiver can decrypt media.
+
+---
+
+📢 5. Notification Service (Push Notifications)
+
+📝 Q11: How does WhatsApp handle push notifications for new messages?
+A11: WhatsApp uses Firebase Cloud Messaging (FCM) for Android and 
+Apple Push Notification Service (APNs) for iOS to send real-time alerts.
+
+📝 Q12: How are notifications sent to offline users?
+A12: WhatsApp uses Pub/Sub messaging, where messages are stored temporarily 
+in a queue and delivered once the user comes online.
+
+---
+
+👨‍💻 6. Presence Service (Online/Offline Status)
+
+📝 Q13: How does WhatsApp track a user’s online/offline status?
+A13: Redis is used to store and update presence status efficiently. 
+WebSockets notify clients when users go online/offline.
+
+📝 Q14: How does WhatsApp update the "Last Seen" status?
+A14: "Last seen" timestamps are stored in Cassandra and updated 
+asynchronously to avoid performance bottlenecks.
+
+---
+
+🔒 7. End-to-End Encryption Service (Security & Privacy)
+
+📝 Q15: How does WhatsApp ensure message security?
+A15: WhatsApp uses Signal Protocol, which includes asymmetric encryption 
+(public/private keys) for secure key exchange and AES encryption 
+for message payloads.
+
+📝 Q16: What happens if a user reinstalls WhatsApp?
+A16: Encryption keys are not stored on WhatsApp servers. 
+When a user reinstalls the app, they must re-register and generate new encryption keys.
+
+---
+
+💾 8. Caching Service (Performance Optimization)
+
+📝 Q17: Why does WhatsApp use Redis clustering?
+A17: Redis speeds up message retrieval for frequent queries (e.g., recent chats, 
+user presence) and reduces database load.
+
+📝 Q18: What caching strategies does WhatsApp use?
+A18: WhatsApp uses Write-Through and Lazy Loading caching strategies 
+to ensure fast data retrieval.
+
+---
+
+📣 9. Event Processing (Kafka)
+
+📝 Q19: How does WhatsApp handle large-scale event streaming?
+A19: WhatsApp uses Kafka to stream real-time message events, 
+such as chat delivery updates and analytics.
+
+📝 Q20: How does Kafka ensure message durability?
+A20: Kafka uses replication and partitioning, ensuring events are stored 
+across multiple brokers for fault tolerance.
+
+---
+
+🤖 10. Spam Detection (AI & ML)
+
+📝 Q21: How does WhatsApp detect spam messages?
+A21: WhatsApp uses AI/ML models (TensorFlow, OpenAI API) to analyze 
+message patterns and detect suspicious behavior.
+
+📝 Q22: How does WhatsApp prevent false spam detection?
+A22: AI models are trained on large datasets, and user feedback helps 
+refine spam detection algorithms.
+
+---
+
+📊 11. Analytics Engine (User Insights)
+
+📝 Q23: How does WhatsApp track user engagement?
+A23: Analytics tools like BigQuery and Apache Flink process real-time 
+data to measure active users, message counts, and interaction patterns.
+
+📝 Q24: Why does WhatsApp need real-time analytics?
+A24: Real-time analytics help detect anomalies, prevent fraud, 
+and optimize infrastructure dynamically.
+
+---
+
+📞 12. Contact Sync Service
+
+📝 Q25: How does WhatsApp sync user contacts?
+A25: WhatsApp uses ElasticSearch and MySQL to index and search 
+for user contacts efficiently.
+
+📝 Q26: How does WhatsApp handle duplicate contacts?
+A26: Contact syncing applies de-duplication algorithms to merge 
+multiple entries of the same user.
+
+---
+
+🛠 General System Design Questions
+
+📝 Q27: How does WhatsApp scale to billions of users?
+A27: WhatsApp follows horizontal scaling using microservices, load balancers, 
+and database sharding.
+
+📝 Q28: How does WhatsApp prioritize consistency vs. availability?
+A28: WhatsApp prioritizes availability (AP in CAP theorem) to ensure messages 
+are always sent, even if some servers fail.
+
+📝 Q29: What happens if a WhatsApp server goes down?
+A29: Redundant servers, data replication, and failover mechanisms 
+ensure minimal downtime.
+
+-->
