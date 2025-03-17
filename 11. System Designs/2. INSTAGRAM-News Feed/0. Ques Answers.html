@@ -1,0 +1,143 @@
+<!-- 
+✅ 1. High-Level Architecture :
+-------------------------------
+
+Q1: Can you walk me through your system architecture?
+A:  The system follows a microservices architecture, with each service handling a specific function.
+    An API Gateway (Nginx) manages external requests and routes them to appropriate microservices.
+
+    Databases:
+    ----------
+    1. PostgreSQL (for user authentication and profile data)
+       MongoDB & S3 (for post storage)
+       MySQL (for engagement tracking- like,comment)
+
+    2. Neo4j (for managing follower relationships)
+       Cassandra (for scalable feed storage)
+
+    3. Event-driven architecture using Kafka for real-time updates and streaming.
+       Recommendation Service using Neo4j.
+       Redis Clustering is used for caching frequently accessed data, improving response time.
+
+Q2: How do different services communicate in your architecture?
+A:  1. Services communicate via RESTful APIs and gRPC for high-speed data exchange.
+    2. Kafka (Event Streaming) ensures real-time processing for news feed updates, recommendations(using AI/ML), and status update.
+    3. Firebase / SNS / Twilio (For real-time alerts)  are used for notifications.
+    4. WebSockets push real-time updates (e.g. live interactions, new likes/comments appearing live/ Chat too -Its not here).
+
+Q3: Why did you choose a microservices architecture over a monolithic one?
+A: 1. Scalability: Each service can be scaled independently based on traffic.
+   2. Fault Tolerance: If one service fails, others continue to work.
+   3. Technology Flexibility: Different databases and technologies can be used per service (e.g., MongoDB for posts, MySQL for engagement).
+   4. Faster Development: Teams can work on different services in parallel without dependencies.
+-->
+
+
+<!-- 
+✅ 2. Scalability & Performance:
+--------------------------------
+Q1: How does your system handle millions of users efficiently?
+Ans 1. Horizontal Scaling: Services run on Kubernetes clusters, scaling as needed.
+    2. Load Balancing: Nginx API Gateway ensures requests are evenly distributed.
+    3. CDNs (Content Delivery Networks): Used for caching images/videos.
+    4. Sharding & Replication: Databases are sharded by user ID for faster access.
+-->
+
+
+<!-- 
+✅ 3. Data Storage & Databases:
+-------------------------------
+Q1: Why use Neo4j for the Follower Service?
+A:  1. Graph databases are optimized for relationship queries like “Who follows whom?”
+    2. A simple query can quickly retrieve mutual followers, suggested friends, or user networks.
+    3. Traditional SQL databases struggle with deep relationship traversals, making Neo4j the best choice.
+
+Q2: How do you ensure data consistency across services?
+A:  1. Eventual Consistency: Uses Kafka to update services asynchronously (like seen status).
+    2. Caching Mechanisms: Redis ensures frequently accessed data remains available.
+-->
+
+
+<!-- 
+✅ 4. Feed Generation & Ranking:
+--------------------------------
+Q1: How does the news feed service generate personalized feeds?
+A:  1. Uses Kafka to aggregate posts from followed users.
+    2. Cassandra stores feed items for fast retrieval.
+    3. AI-based ranking (TensorFlow & Spark ML) personalizes feeds using:
+            Engagement signals (likes, comments)
+            User interactions (clicks, views)
+            Trending posts
+            Collaborative filtering (similar users' interests)
+
+Q2: How do you handle real-time feed updates?
+A: 1. event streaming ensures updates are pushed instantly.
+   2. WebSockets push real-time updates (e.g., new likes/comments appearing live).
+   3. Redis preloads top-ranked posts to reduce database queries.
+-->
+
+
+<!-- 
+✅ 5. Security & Authentication:
+--------------------------------
+Q1: How is user authentication handled?
+A:  1. OAuth 2.0 + JWT Tokens for secure login.
+    2. Rate limiting & CAPTCHAs prevent bot attacks.
+    3. Two-Factor Authentication (2FA) for additional security.
+-->
+
+
+<!-- 
+✅ 6. Real-Time Notifications & Messaging:
+------------------------------------------
+Q1: How does the push notification system work?
+A:  1. Kafka handles notification events (e.g., likes, comments, new followers).
+    2. Uses Firebase Cloud Messaging (FCM) for mobile notifications.
+    3. SNS/Twilio handles SMS and email alerts.
+
+Q2: How would you reduce latency in real-time messaging?
+A:  1. Use WebSockets instead of polling.
+    2. Store recent messages in Redis for faster retrieval.
+-->
+
+
+<!-- 
+✅ 7. AI-Based Recommendations :
+--------------------------------
+Q1: How does the recommendation engine suggest posts & users?
+A:  1. Uses TensorFlow-based ML models to analyze:
+    2. Post engagement (likes, shares, comments)
+    3. User interests & search history
+    4. Friend connections (Neo4j for social graphs)
+    5. Implements collaborative filtering & content-based filtering for suggestions.
+
+Q2: How is AI moderation handled for inappropriate content?
+A: 1. Uses OpenAI API & TensorFlow to analyze image/video/text content.
+   2. Implements keyword-based filters & sentiment analysis for toxicity detection.
+   3. Human reviewers are involved in edge cases.
+-->
+
+
+<!-- 
+✅ 8. Event Processing & Analytics :
+-----------------------------------
+Q1: How do you handle event-driven processing?
+A:  1. Uses Kafka for event-based streaming.
+    2. Services listen to events like new post creation, comment added, user followed.
+    3. Real-time analytics engines (BigQuery, Apache Flink) process user behavior data.
+
+Q2: How do you generate analytics reports?
+A: 1. User behavior logs are stored in BigQuery.
+   2. Flink processes engagement data (active users, top posts).
+   3. Reports are visualized using Tableau or Grafana dashboards.
+-->
+
+
+<!-- 
+✅ 9. Fault Tolerance & Disaster Recovery :
+-------------------------------------------
+Q19: How does the system handle failures?
+A:  1. Circuit Breaker Pattern: Services detect failures & reroute requests.
+    2. Database Replication & Backups: Ensures data loss prevention.
+    3. Auto-scaling on Kubernetes: Keeps services running even under high load.
+-->
