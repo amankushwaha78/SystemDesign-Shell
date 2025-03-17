@@ -1,0 +1,117 @@
+<!-- 
+1. System Requirements :
+-----------------------
+    Functional Requirements :
+    1. User Service :   i).  User authentication (sign up, login)             [OAuth, JWT].
+                        ii). Profile creation and updates                     [PostgreSQL (DB)].
+
+    2. Messaging Service : i). Send & receive messages                        [WebSockets, gRPC].
+                           ii). Store chat history                            [Cassandra].
+                           iii). Delivery & read receipts                     [Event-driven system].
+
+    3. Group Chat Service : i). Create and manage group chats                 [DynamoDB].
+                            ii). Admin controls (add/remove users)            [Event-driven system].
+
+    4. Media Service : i). Upload and send images, videos, and documents      [AWS S3, CDN].
+                       ii). End-to-end encrypted media sharing                [Signal Protocol].
+
+    5. Notification Service : i). Push notifications for new messages         [Firebase/APNs].
+                              ii). Delivery alerts for offline users          [Pub/Sub Messaging].
+
+    6. Presence Service : i). Online/offline status tracking                  [Redis].
+                         ii). Last seen updates                               [Cassandra].
+
+    7. End-to-End Encryption Service : i). Secure chat messages               [Signal Protocol].
+                                       ii). Key exchange mechanism            [Asymmetric Encryption].
+
+    8. Caching Service : i). Quick retrieval of frequent data                 [Redis Clustering].
+
+    Other Services :
+    9. Event Processing : Real-time message streaming & analytics             [Kafka].
+    10. Spam Detection : i). Detect spam & suspicious messages                [AI/ML, OpenAI API].
+    11. Analytics Engine : i). User behavior tracking                         [BigQuery, Apache Flink].
+    12. Contact Sync Service : i). Sync and manage contacts                   [ElasticSearch, MySQL].
+
+2. ⚙️ Non-Functional Requirements (How the system should behave) :
+----------------------------------------------------------------
+a. Scalability → Supports billions of users.
+b. Performance → Low-latency messaging with instant delivery.
+c. Security → End-to-end encryption, secure key storage.
+d. High Availability → Redundant servers, data replication.
+e. Fault Tolerance → Ensures message delivery despite failures.
+f. Consistency vs. Availability → Prioritizes availability (AP in CAP theorem).
+-->
+
+<!-- 
+    WhatsApp Chat System Design: High-Performance Microservices Architecture
+
+                            ┌────────────────────────────────────────────┐
+                            │              API Gateway (Nginx)           │
+                            └────────────────────────────────────────────┘
+                                                 ⬇
+    ┌───────────────────────────────────────────────────────────────────────────────────────────┐
+    │                                      Microservices Layer                                  │
+    ├───────────────────────────────────────────────────────────────────────────────────────────┤
+    │                                                                                           │
+    │   ┌────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐│
+    │   │  User Service          │     │  Messaging Service     │     │  Notification Service  ││
+    │   │  (Profiles, Auth)      │     │  (Real-time Chat)      │     │  (Push Notifications)  ││
+    │   │  [OAuth, JWT]          │     │  [WebSockets, gRPC]    │     │  [Firebase, SNS]       ││
+    │   │                        │     │                        │     │                        ││
+    │   │  ┌──────────────────┐  │     │  ┌──────────────────┐  │     │  ┌──────────────────┐  ││
+    │   │  │  PostgreSQL      │  │     │  │  Cassandra       │  │     │  │  Redis Pub/Sub   │  ││
+    │   │  └──────────────────┘  │     │  └──────────────────┘  │     │  └──────────────────┘  ││
+    │   └────────────────────────┘     └────────────────────────┘     └────────────────────────┘│
+    │                                                                                           │
+    │   ┌────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐│
+    │   │  Group Chat Service    │     │  Presence Service      │     │  Media Service         ││
+    │   │  (Group Management)    │     │  (Online Status)       │     │  (File Storage)        ││
+    │   │[DynamoDB, Event-Driven]│     │  [Redis, WebSockets]   │     │  [AWS S3, CDN]         ││
+    │   │                        │     │                        │     │                        ││
+    │   │  ┌──────────────────┐  │     │  ┌──────────────────┐  │     │  ┌──────────────────┐  ││
+    │   │  │  DynamoDB        │  │     │  │  Redis           │  │     │  │  AWS S3          │  ││
+    │   │  └──────────────────┘  │     │  └──────────────────┘  │     │  └──────────────────┘  ││
+    │   └────────────────────────┘     └────────────────────────┘     └────────────────────────┘│
+    │                                                                                           │
+    │   ┌────────────────────────┐                                                              │
+    │   │  Encryption Service    │                                                              │
+    │   │  (E2E Secure Messages) │                                                              │
+    │   │  [Signal Protocol]     │                                                              │
+    │   │                        │                                                              │
+    │   │  ┌──────────────────┐  │                                                              │
+    │   │  │  Encryption Keys │  │                                                              │
+    │   │  │  (Asymmetric)    │  │                                                              │
+    │   │  └──────────────────┘  │                                                              │
+    │   └────────────────────────┘                                                              │
+    │                                                                                           │
+    └───────────────────────────────────────────────────────────────────────────────────────────┘
+                                            ⬇
+    ┌───────────────────────────────────────────────────────────────────────────────────────────┐
+    │                                  Background Processing & Event Handling                   │
+    ├───────────────────────────────────────────────────────────────────────────────────────────┤
+    │                                                                                           │
+    │   ┌───────────────────────────────────────────────────────────────────────────────────┐   │
+    │   │                                  Kafka (Event Streaming)                          │   │
+    │   └───────────────────────────────────────────────────────────────────────────────────┘   │
+    │                                                                                           │
+    │   ┌─────────────────────────────┐     ┌──────────────────────────────┐                    │
+    │   │ Spam Detection Service      │     │  Analytics Engine            │                    │
+    │   │ (Filter spam/scams)         │     │ (User engagement insights)   │                    │
+    │   │ [AI, TensorFlow, OpenAI API]│     │ [BigQuery, Apache Flink]     │                    │
+    │   └─────────────────────────────┘     └──────────────────────────────┘                    │
+    │                                                                                           │
+    └───────────────────────────────────────────────────────────────────────────────────────────┘
+                                           ⬇
+    ┌───────────────────────────────────────────────────────────────────────────────────────────┐
+    │                                   Push Notification Service                               │
+    ├───────────────────────────────────────────────────────────────────────────────────────────┤
+    │                                                                                           │
+    │   ┌───────────────────────────┐     ┌───────────────────────────┐                         │
+    │   │ Firebase Cloud Messaging  │     │  Amazon SNS / Twilio       │                         │
+    │   │ (Mobile notifications)    │     │  (SMS & Push notifications)│                         │
+    │   │ [WebSockets, Pub/Sub]     │     │ [Lambda Functions]         │                         │
+    │   └───────────────────────────┘     └───────────────────────────┘                         │
+    │                                                                                           │
+    └───────────────────────────────────────────────────────────────────────────────────────────┘
+
+    -->
