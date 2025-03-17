@@ -2,13 +2,25 @@
 1. System Requirements :
 -----------------------
     Functional Requirements :
-    a. Profile Service  - User authentication (sign up, login) :
-    b. Profile creation and updates :
-    c. Swiping mechanism (like/dislike)
-    d. Matchmaking (when both users like each other)
-    e. Chat system for matched users
-    f. Discovery feed with recommendations
-    g. Push notifications
+    1. Profile Service :   i).  User authentication (sign up, login)            [OAuth, JWT] .
+                           ii). Profile creation and updates                    [PostgreSQL (DB)].
+    
+    2. Image Service : Uploading Images.                                        [S3, CDN]
+
+    3. Matching Service :  i).  Matchmaking (when both users like each other).  [AI-based ML or Interest Based]
+                           ii). Swiping mechanism (like/dislike).               [MongoDB]
+
+    4. Chat system for matched users : i). Message Communication.               [WebSockets, XMPP, TCP]
+                                       ii).Message History Storage.             [Cassandra]
+
+    5. Session Service for each user : To store current user's cache            [Redis]
+
+    6. Discovery feed with recommendations : i)  Recomm using power of ML/AI    [AI-based Suggestions]
+                                             ii).Store recommendations          [Neo4j / GraphDB]
+    
+    Other Services :
+    7. Event Processing : To Process Sent/Delivered/Seen Status                 [Kafka (Event Streaming)]
+    8. Push notifications Services :                                            [Firebase / SNS / Twilio (For real-time alerts)]
 
 
 Tinder System Architecture (Scalable) :
@@ -49,41 +61,26 @@ Tinder System Architecture (Scalable) :
             ┌──────────────────────────────────────────────────────────────────────────────┐
             │                           Media & Caching Layer                              │
             ├──────────────────────────────────────────────────────────────────────────────┤
-            │ S3 / Cloud Storage (Images)  |  Redis (Session, Chat Cache)                  │
+            │                         Redis (Session, Chat Cache)                          │
             └──────────────────────────────────────────────────────────────────────────────┘
                                                 ⬇
             ┌──────────────────────────────────────────────────────────────────────────────┐
             │                       Background & Event Processing                          │
             ├──────────────────────────────────────────────────────────────────────────────┤
-            │ Kafka (Event Streaming)  |  AI Moderation  |  Analytics Engine               │
+            │                          Kafka (Event Streaming)                             │
             └──────────────────────────────────────────────────────────────────────────────┘
                                                 ⬇
             ┌──────────────────────────────────────────────────────────────────────────────┐
             │                         Push Notification Service                            │
             ├──────────────────────────────────────────────────────────────────────────────┤
-            │ Firebase / SNS / Twilio (For real-time alerts)                               │
+            │              Firebase / SNS / Twilio (For real-time alerts)                  │
             └──────────────────────────────────────────────────────────────────────────────┘
 -->
 
 
-
 <!-- 
-
-🚀 Final User Journey Summary  
-1️⃣ Login & Session Handling → API Gateway → Profile Service → Session Service  
-2️⃣ Profile Setup & Image Upload → Profile Service → Image Service  
-3️⃣ Swipe & Match System → Matching Service → Recommendation Service  
-4️⃣ Chat & Messaging → Chat Service → Cassandra DB (WebSockets for real-time)  
-5️⃣ Notifications & Alerts → Kafka → Push Notification Service  
-6️⃣ Media & Caching → S3 Storage → Redis Cache  
-7️⃣ AI Moderation & Analytics → AI Moderation → Analytics Engine  
-
-This ensures a smooth, fast, and scalable Tinder-like experience! 🚀  
--->
-
-
-<!-- 
-🔹 Choosing the Right DB Based on Needs
+🔹 Choosing the Right DB Based on Needs :
+-----------------------------------------
 For high-speed reads/writes & horizontal scaling → Use Cassandra, DynamoDB, or MongoDB
 For complex queries & structured data → Use PostgreSQL or MySQL
 For AI-driven relationship recommendations → Use Neo4j or AWS Neptune (GraphDBs)
