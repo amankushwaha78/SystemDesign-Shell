@@ -52,12 +52,14 @@
 ✅ Handle Errors Properly:
     a. Give clear error messages, not just "Something went wrong."
     b. Use correct HTTP codes:
-        200 OK → Everything is good  
-        201 Created → New item added  
-        400 Bad Request → Wrong request  
-        401 Unauthorized → Not allowed  
-        404 Not Found → Can’t find it  
-        500 Internal Server Error → Something broke on the server  
+       i).  200 OK → Everything is good  
+            201 Created → New item added  
+   
+      ii).  400 Bad Request → Wrong request  
+            401 Unauthorized → Not allowed  
+            404 Not Found → Can’t find it  
+
+      iii). 500 Internal Server Error → Something broke on the server  
 
     ❌ **Bad Error Handling:**
     a. Returning unclear or misleading error messages:
