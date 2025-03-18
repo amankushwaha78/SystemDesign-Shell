@@ -5,11 +5,11 @@
     1. User Service :   i).  User authentication (sign up, login)             [OAuth, JWT].
                         ii). Profile creation and updates                     [PostgreSQL (DB)].
 
-    2. Post Service :   i).  Uploading and storing posts                      [MongoDB, S3].
-                        ii). Post deletion and updates                        [MongoDB].
+    2. Post Service :   i).  Uploading and storing posts                      [Cassandra, S3].
+                        ii). Post deletion and updates                        [Cassandra].
 
-    3. Engagement Service : i). Likes and comments on posts                   [MySQL Triggers].
-                            ii). Storing engagement data                      [MySQL].
+    3. Engagement Service : i). Likes and comments on posts                   [Cassandra].
+                            ii). Storing engagement data                      [Cassandra].
 
     4. Follower Service : i). Follow/Unfollow users                           [Graph Algorithms].
                           ii). Maintaining relationships                      [Neo4j].
@@ -55,10 +55,10 @@ f. Fault Tolerance → System should work even if some parts fail
     │   ┌────────────────────────┐     ┌────────────────────────┐     ┌────────────────────────┐│
     │   │  User Service          │     │  Post Service          │     │  Engagement Service    ││
     │   │  (Profiles, Auth)      │     │  (Upload, Media)       │     │  (Likes, Comments)     ││
-    │   │  [OAuth, JWT]          │     │  [Cloudinary, S3]      │     │  [MySQL Triggers]      ││
+    │   │  [OAuth, JWT]          │     │  [Cassandra, S3]       │     │  [Cassandra]          ││
     │   │                        │     │                        │     │                        ││
     │   │  ┌──────────────────┐  │     │  ┌──────────────────┐  │     │  ┌──────────────────┐  ││
-    │   │  │  PostgreSQL      │  │     │  │  MongoDB         │  │     │  │  MySQL           │  ││
+    │   │  │  PostgreSQL      │  │     │  │  Cassandra       │  │     │  │  Cassandra       │  ││
     │   │  └──────────────────┘  │     │  └──────────────────┘  │     │  └──────────────────┘  ││
     │   └────────────────────────┘     └────────────────────────┘     └────────────────────────┘│
     │                                                                                           │
@@ -111,5 +111,4 @@ f. Fault Tolerance → System should work even if some parts fail
     │   └───────────────────────────┘     └────────────────────────-───┘                        │
     │                                                                                           │
     └───────────────────────────────────────────────────────────────────────────────────────────┘
-
-    -->
+-->
