@@ -1,0 +1,107 @@
+<!--
+A. NonSql Databases Storage Strategy :
+-------------------------------------
+    ╔════════════╤═══════════════════════════════╤══════════════════════════╗
+    ║ Database   │ Storage Strategy              │ Diagram                  ║
+    ╟────────────┼───────────────────────────────┼──────────────────────────╢
+    ║ MongoDB    │ JSON-like Documents           │ { "key": "value" }       ║
+    ║ Cassandra  │ Wide-Column Store             │ Sharded across nodes     ║
+    ╟────────────┼───────────────────────────────┼──────────────────────────╢
+    ║ MySQL      │ Table-Based Relational DB     │ Users → Orders (Joins)   ║
+    ╟────────────┼───────────────────────────────┼──────────────────────────╢
+    ║ Neo4j      │ Graph Nodes & Relationships   │ (A) -[KNOWS]-> (B)       ║
+    ║ Redis      │ In-Memory Key-Value Store     │ { "UserID": "Session" }  ║
+    ║ AWS S3     │ Object Storage (Metadata)     │ https://s3.com/image.jpg ║
+    ╚════════════╧═══════════════════════════════╧══════════════════════════╝
+-->
+
+<!--
+B. NonSql Databases Storage Strategy :
+-------------------------------------
+
+1️⃣ Sharding + Replication :
+    (Used in Cassandra, MongoDB, DynamoDB for High-Speed Reads/Writes & Chat Messages) :
+
+    🔹 How it scales:
+    A. Sharding    → ✔ Data is split into multiple shards for better performance.
+                     ✔ These shards are shared across multiple servers (horizontal scaling) for better performance.
+    B. Replication → ✔ One data is copied to multiple shards.
+                     ✔ Replication ensures high availability by keeping backup copies. If one shard fails another always ready.
+                                ┌──────────────────┐
+                                |   Client Request |
+                                └──────────────────┘
+                                        ↓
+                        ┌───────────────┬───────────────┬───────────────┐
+                        |  Shard 1      |  Shard 2      |  Shard 3      |
+                        |  (Server 1)   |  (Server 2)   |  (Server 3)   |
+                        └───────────────┴───────────────┴───────────────┘
+
+    Sharding(Horizontal Scaling) = Performace ⬆️ | Replication = Availability ⬆️
+
+
+2️⃣ Vertical Scaling + Read Replicas :
+   (Used in MySQL, PostgreSQL for Complex Queries & Structured Data) :
+
+   🔹 How it scales:
+    A. Vertical Scaling  → ✔ Add more CPU/RAM to a single server to handle bigger workloads.
+                           ✔ So it can handle complex SQL queries
+    B. Read Replicas     → ✔ Create read-only copies for better query performance.
+
+                        ┌──────────────────┐
+                        |    Large Server  |
+                        ├──────────────────┤
+                        |  More CPU & RAM  |
+                        ├──────────────────┤
+                        |  Handles Queries |
+                        └──────────────────┘
+
+    Vertical Scaling = Performace ⬆️ | Read Replicas = Availability ⬆️
+
+
+3️⃣ Sharding + Replication
+   (Used in Neo4j/AWS Neptune for AI Recommendations) :
+
+   Sharding → Graph partitioning to distribute relationships across nodes.
+   Replication → Maintains data across multiple servers for high availability.
+                        (Aman) ───[FRIEND]───> (Bob)
+                        │                     │
+                        │                     │
+                        ├───[FOLLOWS]───> (Charlie)
+    
+    A. ✔ Nodes store entities (people-Aman,Bob, Charlie, etc.)
+    B. ✔ Edges store relationships (friend, follows, likes, etc.)
+    C. ✔ Graph partitioning helps in distributing large-scale graphs across multiple nodes
+
+
+4️⃣ Partitioning & Replication 
+   (Used in Redis/Memcached for Session Management & Fast Lookups) :
+                            ┌──────────────┐
+                            |  Partition 1 | → Server 1
+                            ├──────────────┤
+                            |  Partition 2 | → Server 2
+                            ├──────────────┤
+                            |  Partition 3 | → Server 3
+                            └──────────────┘
+    A. ✔ Keys are distributed across multiple partitions for better load balancing
+    B. ✔ Replication ensures high availability
+    C. ✔ Super fast lookups since data is in-memory
+
+
+5️⃣ Cloud Storage Replication 
+   (Used in AWS S3, Google Cloud Storage for Image Storage) :
+                            ┌──────────────┐
+                            |User Uploads  |
+                            └──────────────┘
+                                    ↓
+                    ┌──────────┬──────────┬──────────┐
+                    |   S3 1   |   S3 2   |   S3 3   |
+                    └──────────┴──────────┴──────────┘
+                                    ↓
+                            ┌──────────────┐
+                            |   Global CDN |
+                            └──────────────┘
+    A. ✔ Images & objects are stored across multiple regions
+    B. ✔ Content Delivery Network (CDN) ensures fast delivery
+    C. ✔ Highly redundant storage with automatic backups
+
+-->
