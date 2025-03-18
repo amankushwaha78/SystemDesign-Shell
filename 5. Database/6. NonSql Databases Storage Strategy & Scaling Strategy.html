@@ -58,23 +58,47 @@ B. NonSql Databases Storage Strategy :
     Vertical Scaling = Performace ⬆️ | Read Replicas = Performace ⬆️
 
 
-3️⃣ Sharding + Replication :
+3️⃣ Graph Partitioning + Replication :
    (Used in Neo4j/AWS Neptune for AI Recommendations) :
 
-   Sharding → Graph partitioning to distribute relationships across nodes.
-   Replication → Maintains data across multiple servers for high availability.
+   🔹 How it scales:
+   A. Graph Partitioning → Graph databases like Neo4j use "graph partitioning" to distribute data across multiple nodes in a cluster
+                        a. ✔ Nodes store entities (people-Aman,Bob, Charlie, etc.)
+                        b. ✔ Edges store relationships (friend, follows, likes, etc.)
+                        
                         (Aman) ───[FRIEND]───> (Bob)
                         │                     │
                         │                     │
                         ├───[FOLLOWS]───> (Charlie)
-    
-    A. ✔ Nodes store entities (people-Aman,Bob, Charlie, etc.)
-    B. ✔ Edges store relationships (friend, follows, likes, etc.)
-    C. ✔ Graph partitioning helps in distributing large-scale graphs across multiple nodes
+
+                        c. ✔ Instead of storing all nodes on a single server, the graph is divided into multiple partitions.
+                              Each partition handles a subset of users & relationships.
+                            ┌──────────────┐       ┌──────────────┐       ┌──────────────┐
+                            | Partition 1  |       | Partition 2  |       | Partition 3  |
+                            |  (Aman)      | —→    |  (Bob)       | —→    |  (Charlie)   |
+                            |  Friends →   |       |  Likes →     |       |  Follows →   |
+                            └──────────────┘       └──────────────┘       └──────────────┘
+                            This reduces query latency by only searching relevant partitions.
+
+   B. Replication → Graph databases use replication to ensure fault tolerance and high availability. 
+                    This means that multiple copies of the data exist across different servers.
+
+                    ┌──────────┬──────────┬──────────┐
+                    | Primary  | Replica1 | Replica2 |
+                    ├──────────┼──────────┼──────────┤
+                    |  (Aman)  |  (Aman)  |  (Aman)  |
+                    |  Friends |  Friends |  Friends |
+                    └──────────┴──────────┴──────────┘
+
+    Graph Partitioning = Performace ⬆️ | Replication = Availability ⬆️
 
 
 4️⃣ Partitioning & Replication 
    (Used in Redis/Memcached for Session Management & Fast Lookups) :
+
+    🔹 How it scales:
+    A. Partitioning (Sharding) → Spreads data across multiple memory instances.
+    B. Replication  → Keeps backup copies in case of failure.
                             ┌──────────────┐
                             |  Partition 1 | → Server 1
                             ├──────────────┤
@@ -82,9 +106,8 @@ B. NonSql Databases Storage Strategy :
                             ├──────────────┤
                             |  Partition 3 | → Server 3
                             └──────────────┘
-    A. ✔ Keys are distributed across multiple partitions for better load balancing
-    B. ✔ Replication ensures high availability
-    C. ✔ Super fast lookups since data is in-memory
+
+    Partitioning = Performace ⬆️ | Replication = Availability ⬆️
 
 
 5️⃣ Cloud Storage Replication 
@@ -104,4 +127,23 @@ B. NonSql Databases Storage Strategy :
     B. ✔ Content Delivery Network (CDN) ensures fast delivery
     C. ✔ Highly redundant storage with automatic backups
 
+-->
+
+
+<!-- 
+Use Case                           DB Used                      Storage Strategy                                   Scaling
+--------------------------------------------------------------------------------------------------------------
+High-Speed Reads/Writes            Cassandra/DynamoDB/MongoDB   Wide-Column (Cassandra), Key-Value (DynamoDB),   Sharding + Replication
+                                                                 Document (MongoDB)                            
+--------------------------------------------------------------------------------------------------------------
+Chat & Real-Time Messages           MongoDB/Cassandra           Document Store (MongoDB), Wide-Column Store      Sharding + Replication
+                                                               (Cassandra)                                     
+--------------------------------------------------------------------------------------------------------------
+Complex Queries & Structured Data   PostgreSQL/MySQL            SQL Tables (Relational Schema)                   Vertical Scaling + Read Replicas
+--------------------------------------------------------------------------------------------------------------
+AI-Driven Recommendations           Neo4j/AWS Neptune           Graph Database (Nodes & Edges)                   Graph Partitioning + Replication
+--------------------------------------------------------------------------------------------------------------
+Session Management & Fast Lookups   Redis/Memcached             In-Memory Key-Value Store                        Partitioning + Replication
+--------------------------------------------------------------------------------------------------------------
+Cloud Image Storage                 AWS S3/Google Cloud Storage Object Storage                                    Replication + CDN
 -->
