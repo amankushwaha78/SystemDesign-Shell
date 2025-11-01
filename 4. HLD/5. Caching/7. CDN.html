@@ -30,7 +30,7 @@ Client  →  Browser Cache (✅) → Serve Response
            ⬇
            ⬇ (Cache Miss)  
            ⬇
-          DNS  →  CDN (✅) → Serve Response  
+          DNS  →  CDN for response (Redis) (✅) → Serve Response  
            ⬇
            ⬇ (Cache Miss)  
            ⬇
@@ -38,7 +38,7 @@ Client  →  Browser Cache (✅) → Serve Response
            ⬇ 
            ⬇ (Check Cache)  
            ⬇
-          Redis (✅) → Serve Response 
+          CDN for DB (Redis) (✅) → Serve Response 
            ⬇ 
            ⬇ (Cache Miss)  
            ⬇
