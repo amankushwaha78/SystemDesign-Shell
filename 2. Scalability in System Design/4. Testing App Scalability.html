@@ -1,0 +1,138 @@
+<!-- /**
+ * Think of scalability testing exactly like testing a car before a long trip 🚗 —
+ * you don’t just check if it starts, you test speed, limits, breakdowns, and recovery.
+ *
+ * ------------------------------------------------------------
+ * a️⃣ Load Testing — “Can it handle normal traffic?”
+ * ------------------------------------------------------------
+ *
+ * What it means
+ * Simulate expected real-world traffic (e.g., 10k users) and observe behavior.
+ *
+ * What you check
+ * - Response time ⏱️
+ * - Error rate ❌
+ * - CPU & memory usage 🧠
+ *
+ * Tools
+ * - Apache JMeter
+ * - k6
+ * - Gatling
+ *
+ * Interview line
+ * “Load testing validates that the system performs well under expected peak traffic.”
+ *
+ * ------------------------------------------------------------
+ * b️⃣ Stress Testing — “When does it break?”
+ * ------------------------------------------------------------
+ *
+ * What it means
+ * Push traffic beyond capacity until the system fails.
+ *
+ * Why it matters
+ * - Find the breaking point
+ * - Understand failure behavior
+ * - Prevent total system collapse
+ *
+ * What you observe
+ * - Graceful degradation?
+ * - Clear error messages?
+ * - Sudden crash vs slow failure?
+ *
+ * Interview line
+ * “Stress testing helps identify system limits and failure modes.”
+ *
+ * ------------------------------------------------------------
+ * c️⃣ Horizontal Scaling Test — “Are all servers sharing the load?”
+ * ------------------------------------------------------------
+ *
+ * What it means
+ * Add more nodes and check whether traffic is evenly distributed.
+ *
+ * What can go wrong
+ * - One server overloaded 😵
+ * - Sticky sessions misconfigured
+ * - Load balancer not scaling
+ *
+ * Things to verify
+ * - Requests spread evenly
+ * - No single hot node
+ * - Auto-scaling triggers correctly
+ *
+ * Interview line
+ * “We validate that adding nodes increases throughput linearly.”
+ *
+ * ------------------------------------------------------------
+ * d️⃣ Database Scalability — “Is the engine strong enough?”
+ * ------------------------------------------------------------
+ *
+ * What it means
+ * Test read/write pressure on the database.
+ *
+ * Key checks
+ * - Query latency
+ * - Lock contention
+ * - Index effectiveness
+ * - Replication lag
+ *
+ * Techniques
+ * - Read replicas
+ * - Caching
+ * - Sharding
+ * - Connection pooling
+ *
+ * Interview line
+ * “Most scalability bottlenecks occur at the database layer.”
+ *
+ * ------------------------------------------------------------
+ * e️⃣ Failure Testing (Chaos Testing) — “Fail on purpose”
+ * ------------------------------------------------------------
+ *
+ * What it means
+ * Intentionally break things to test resilience.
+ *
+ * Simulated failures
+ * - Kill a server 💥
+ * - Network delay
+ * - DB node down
+ * - Cache eviction
+ *
+ * Goal
+ * - System should recover automatically
+ * - No data loss
+ * - Minimal user impact
+ *
+ * Interview line
+ * “We test fault tolerance by simulating failures in production-like environments.”
+ *
+ * ------------------------------------------------------------
+ * f️⃣ Monitoring & Observability — “Eyes on the system”
+ * ------------------------------------------------------------
+ *
+ * What it means
+ * Track system health before and after release.
+ *
+ * Metrics to monitor
+ * - Latency (p95, p99)
+ * - Error rate
+ * - Throughput
+ * - CPU / Memory
+ * - Queue length
+ *
+ * Popular tools
+ * - Prometheus
+ * - Grafana
+ * - Datadog
+ *
+ * Interview line
+ * “You can’t scale what you can’t measure.”
+ *
+ * ------------------------------------------------------------
+ * 🧠 One-Slide Interview Summary (Memorize This)
+ * ------------------------------------------------------------
+ *
+ * “We test scalability using load testing for expected traffic,
+ * stress testing for limits, horizontal scaling validation,
+ * database pressure tests, chaos engineering for resilience,
+ * and continuous monitoring in production.”
+ */ -->
