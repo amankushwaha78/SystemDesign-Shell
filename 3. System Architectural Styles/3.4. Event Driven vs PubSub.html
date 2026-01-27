@@ -1,53 +1,4 @@
 <!-- 
-===========================================================
-📬 EVENT-DRIVEN vs PUBLISHER–SUBSCRIBER (SIMPLE VERSION)
-===========================================================
-
-💡 Basic Idea:
---------------
-👉 Publisher–Subscriber (Pub–Sub) is a *message delivery pattern*.  
-👉 Event-Driven is a *system design style* that uses Pub–Sub underneath.
-
-In short:
-➡️ Pub–Sub = how messages move  
-➡️ Event-Driven = how system reacts to those messages
-
------------------------------------------------------------
-🔍 DIFFERENCE TABLE
------------------------------------------------------------
-
-| Feature | Publisher–Subscriber                             | Event-Driven Architecture |
-|----------|-------------------------------------------------|------------------------------|
-| 🧠 Meaning | Publishers send messages, subscribers receive | Whole system reacts to events |
-| 🔗 Connection | Loose connection via message broker        | Very loosely coupled via event bus |
-| 💬 Communication | One publisher → many subscribers        | One event → can trigger many other events |
-| 🧱 Components | Publisher, Broker, Subscriber              | Event Source, Event Bus, Consumers |
-| 🧩 Example Message | "New Blog Posted"                     | "OrderPlaced", "PaymentDone", "EmailSent" |
-| 💾 Storage | Usually messages not stored long              | Events often stored (can replay later) |
-| ⚙️ Focus | Message delivery | System behavior & data flow  |
-| 🧰 Tools | Redis Pub/Sub, Google Pub/Sub                   | Kafka, RabbitMQ, AWS EventBridge |
-| 💬 Example Use | Chat updates, notifications               | E-commerce, IoT, microservices |
-
------------------------------------------------------------
-🎯 Simple Example
------------------------------------------------------------
-
-📢 Pub–Sub Example:
--------------------
-YouTube Channel = Publisher  
-Subscribers = Viewers  
-→ When a new video is uploaded, all subscribers get notified.
-
-⚙️ Event-Driven Example:
-------------------------
-User places an order:
-🟢 "OrderPlaced" event →
-   → Payment Service processes it
-   → Inventory updates stock
-   → Email Service sends confirmation
-
-Each service reacts independently (chain reaction).
-
 -----------------------------------------------------------
 💬 Summary (Interview One-Liner)
 -----------------------------------------------------------
@@ -56,6 +7,12 @@ Each service reacts independently (chain reaction).
 
 Pub–Sub = communication pattern  
 Event-Driven = architecture pattern
+
+
 ===========================================================
+🧠 One-line difference (remember this)
+===========================================================
+👉 Pub/Sub = how a message is sent
+👉 Event-Driven = why the message is sent
 */
  -->
