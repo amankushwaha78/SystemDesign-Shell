@@ -1,0 +1,198 @@
+<!-- 
+====================================================================================================
+5️⃣ FAILURE HANDLING & RETRIES (VERY IMPORTANT)
+====================================================================================================
+
+Failures can happen at ANY layer.
+
+----------------------------------------------------------------------------------------------------
+📌 FAILURE DECISION RULES
+----------------------------------------------------------------------------------------------------
+
+DNS LEVEL:
+----------
+- If region DOWN → choose next best region
+
+L4 LEVEL:
+---------
+- If server fails → retry on another server
+
+L7 LEVEL:
+---------
+- If service returns 5xx → retry (if safe)
+
+SERVICE LEVEL:
+--------------
+- Timeout → retry
+- Circuit breaker opens → stop sending traffic
+
+----------------------------------------------------------------------------------------------------
+📊 FAILURE FLOW
+----------------------------------------------------------------------------------------------------
+
+Request
+ ↓
+Failure detected ❌
+ ↓
+Is retry safe?
+ ↓
+Yes → Retry next instance
+No  → Return error
+ -->
+
+
+<!--
+====================================================================================================
+5️⃣ FAILURE HANDLING, RETRY & CIRCUIT BREAKER
+====================================================================================================
+
+📌 PURPOSE OF THIS STAGE
+----------------------------------------------------------------------------------------------------
+Handle failures gracefully and keep the system:
+✔ Available
+✔ Stable
+✔ Resilient
+
+Failures are EXPECTED in distributed systems.
+
+====================================================================================================
+📍 WHERE FAILURE HANDLING EXISTS
+====================================================================================================
+
+Failure handling logic exists at MULTIPLE LEVELS:
+✔ Client (browser / mobile app)
+✔ API Gateway / L7 Load Balancer
+✔ Service Layer
+✔ Message consumers (async)
+
+There is NO single failure-handling place.
+
+====================================================================================================
+❓ QUESTIONS THIS STAGE ANSWERS
+====================================================================================================
+
+👉 What if a request fails?
+👉 Should we retry?
+👉 When should we stop retrying?
+👉 How to prevent cascading failures?
+
+====================================================================================================
+🔁 RETRY MECHANISM
+====================================================================================================
+
+Retry means:
+-------------
+👉 Trying the same request again after a failure
+
+Common retry triggers:
+----------------------
+- Timeout
+- Network error
+- 5xx server error
+
+❌ Do NOT retry on:
+------------------
+- 4xx client errors
+- Invalid requests
+
+--------------------------------------------------
+📌 SAFE RETRY RULE
+--------------------------------------------------
+✔ Only retry IDEMPOTENT operations
+Example:
+- GET ✔
+- PUT ✔
+- POST ❌ (usually)
+
+====================================================================================================
+⏱️ RETRY STRATEGIES
+====================================================================================================
+
+1️⃣ IMMEDIATE RETRY
+-------------------
+- Retry instantly
+- Risk: traffic spike
+
+2️⃣ FIXED DELAY
+---------------
+- Retry after fixed time
+
+3️⃣ EXPONENTIAL BACKOFF (BEST PRACTICE)
+---------------------------------------
+- Retry after: 1s → 2s → 4s → 8s
+- Prevents overload
+
+====================================================================================================
+🚨 CIRCUIT BREAKER
+====================================================================================================
+
+Circuit Breaker prevents repeated failures.
+
+STATES:
+-------
+1️⃣ CLOSED
+- Requests flow normally
+
+2️⃣ OPEN
+- Too many failures
+- Requests blocked immediately
+
+3️⃣ HALF-OPEN
+- Limited test requests allowed
+- If success → CLOSE
+- If fail → OPEN again
+
+--------------------------------------------------
+📊 CIRCUIT BREAKER FLOW
+--------------------------------------------------
+
+Request
+  ↓
+Failure count exceeds threshold
+  ↓
+Circuit OPEN ❌
+  ↓
+Requests blocked
+  ↓
+Wait time expires
+  ↓
+HALF-OPEN (test)
+  ↓
+Success → CLOSED
+Failure → OPEN
+
+====================================================================================================
+🧠 WHY CIRCUIT BREAKER IS IMPORTANT
+====================================================================================================
+
+✔ Prevents cascading failures
+✔ Protects downstream services
+✔ Improves overall system stability
+
+====================================================================================================
+🧠 WHAT THIS STAGE DOES NOT DO
+====================================================================================================
+
+❌ Does NOT fix bugs
+❌ Does NOT guarantee success
+❌ Does NOT replace proper monitoring
+
+====================================================================================================
+🧠 FINAL MEMORY TRICK
+====================================================================================================
+
+Retry = Try again  
+Backoff = Try slowly  
+Circuit Breaker = Stop trying  
+
+====================================================================================================
+🎤 INTERVIEW-SAFE ONE-LINER
+====================================================================================================
+
+“Failures are handled using retries with backoff and circuit breakers to prevent cascading
+failures and maintain system stability.”
+
+====================================================================================================
+END OF FAILURE HANDLING STAGE
+====================================================================================================
+-->
