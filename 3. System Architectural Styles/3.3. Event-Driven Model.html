@@ -10,6 +10,32 @@ Note : The sender and receiver service do not directly communicate with each oth
        they don't know about each other,
        making the system loosely coupled and scalable.
 
+
+What it means :
+---------------
+👉 System reacts to events
+    Event happens → listeners react
+
+Example :
+a. UserPlacedOrder event
+b. PaymentService reacts
+c. EmailService reacts
+
+Real-life analogy:
+----------------- 🔔 Doorbell
+a. Bell rings
+b. Everyone reacts differently
+
+Key points
+---------
+✅ Highly scalable
+✅ Async
+❌ Event flow can get confusing
+
+⚠️ Important :
+--------------
+Event-driven systems usually use Pub/Sub under the hood
+
 How the Event-Driven Model Works (Step-by-Step):
 -----------------------------------------
 
