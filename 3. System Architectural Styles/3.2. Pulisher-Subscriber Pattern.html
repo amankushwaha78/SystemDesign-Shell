@@ -88,6 +88,20 @@ Examples:
 - "OrderPlaced"
 - "UserRegistered"
 
+Publisher
+   │
+   ▼
+Message Broker
+   └── Topic ("OrderPlaced")
+           ├── Subscriber 1
+           ├── Subscriber 2
+           └── Subscriber 3
+   └── Topic ("OrderRefund")
+           ├── Subscriber 1
+           ├── Subscriber 2
+           └── Subscriber 3
+
+
 -----------------------------------------------------------
 
 4️⃣ Subscriber  
