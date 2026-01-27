@@ -7,12 +7,11 @@
 --------------------------------
 The Event-Driven Model is an **asynchronous architecture**
 where services communicate by:
-👉 **emitting events**
-👉 **reacting to events**
+👉 emitting events when something happens
+👉 reacting to those events
 
-Instead of calling each other directly, services:
-- Publish events when something happens
-- React to events they are interested in
+Services do NOT call each other directly.
+They communicate via an **event broker**.
 
 -----------------------------------------------------------
 🧠 ONE-LINE MEANING (VERY IMPORTANT)
@@ -43,8 +42,7 @@ They describe **what happened**, not what to do.
 
 1️⃣ Event Producer (Event Source)
 --------------------------------
-- A service that **creates an event**
-- Publishes event when state changes
+- Emits an event when state changes
 - Does NOT know who consumes it
 
 Example:
@@ -54,22 +52,23 @@ Example:
 
 2️⃣ Event Broker / Event Bus
 ----------------------------
-- Central system that receives and routes events
-- Delivers events to interested services
+- Receives events
+- Routes events to interested consumers
+- ACK support depends on broker
 
 Examples:
-- Kafka
-- RabbitMQ
-- AWS EventBridge
-- Redis Streams
+- Kafka (ACK supported)
+- RabbitMQ (ACK supported)
+- AWS EventBridge (managed retries)
+- Redis Streams (ACK supported)
 
 -----------------------------------------------------------
 
 3️⃣ Event Consumer (Listener)
 -----------------------------
-- A service that **listens to events**
+- Listens to events
 - Reacts independently
-- Multiple consumers can react to the same event
+- Multiple consumers can react to same event
 
 Examples:
 - Payment Service
@@ -89,49 +88,85 @@ Step 1️⃣ Event occurs
 
 Step 2️⃣ Event is published
 ---------------------------
-- Order Service publishes "OrderPlaced" event
-- Event is sent to the Event Bus
+- Order Service publishes "OrderPlaced"
+- Event goes to Event Bus
 
 -----------------------------------------------------------
 
 Step 3️⃣ Event is routed
 -----------------------
-- Event Bus finds all subscribers
-- Routes event to them
+- Event Bus finds all consumers
+- Sends event to them
 
 -----------------------------------------------------------
 
 Step 4️⃣ Services react
 ----------------------
-- Payment Service → processes payment
-- Email Service → sends confirmation
-- Inventory Service → updates stock
+- Payment → charges payment
+- Email → sends confirmation
+- Inventory → updates stock
 
-👉 All services work **asynchronously**
+👉 All reactions are **asynchronous**
 👉 No service blocks another
 
 ===========================================================
-🖼️ VISUAL FLOW (EASY TO REMEMBER)
+📌 ACKNOWLEDGMENT (ACK) IN EVENT-DRIVEN SYSTEMS
 ===========================================================
 
-        ┌──────────────┐
-        │ Event Source │
-        └──────┬───────┘
-               │
-        Generates Event
-               │
-               ▼
-     ┌────────────────────┐
-     │     Event Bus      │
-     └──────┬─────────────┘
-            │
-      Routes Event
-            │
-   ┌────────┴────────┐
-   │                 │
-┌──▼──┐           ┌──▼──┐
-│Svc 1│           │Svc 2│
-└─────┘           └─────┘
+👉 **ACK is NOT a core concept of Event-Driven Architecture**
+👉 ACK depends on the **event broker implementation**
+
+-----------------------------------------------------------
+✅ EVENT-DRIVEN WITH ACK (RELIABLE EVENT PROCESSING)
+-----------------------------------------------------------
+
+Used with brokers like:
+- Kafka
+- RabbitMQ
+- Redis Streams
+- Google Pub/Sub
+
+How it works:
+- Each consumer receives the event
+- Each consumer sends its **OWN ACK**
+- If ACK is NOT received:
+  → event is retried for that consumer
+
+👉 Failure of one consumer does NOT block others  
+👉 Consumers must be **idempotent**
+
+-----------------------------------------------------------
+❌ EVENT-DRIVEN WITHOUT ACK (BEST-EFFORT EVENTS)
+-----------------------------------------------------------
+
+Used with:
+- Fire-and-forget Pub/Sub
+- In-memory event emitters
+
+How it works:
+- Event is delivered once
+- If consumer is down → event is lost
+- No retry
+
+👉 Suitable only for **non-critical events**
+
+===========================================================
+🖼️ VISUAL FLOW (WITH ACK)
+===========================================================
+
+Reliable Event-Driven (with ACK):
+
+        Event Producer
+              │
+              ▼
+           Event Bus
+        ┌─────┴─────┐
+        │           │
+   Consumer A   Consumer B
+        │           │
+      ACK ✅       ❌ No ACK
+        │           │
+     Done        Retried for B
 
 ===========================================================
 🌍 REAL-WORLD EXAMPLE (E-COMMERCE)
@@ -148,81 +183,49 @@ Consumers:
 - Email Service
 - Inventory Service
 
-Flow:
-🛒 Order Service → emits "OrderPlaced"
-💳 Payment Service → charges payment
-📧 Email Service → sends confirmation
-📦 Inventory Service → updates stock
-
-👉 Order Service DOES NOT know who reacted
+If ACK supported:
+- Each service ACKs independently
+- Failed service retries safely
 
 ===========================================================
-🔔 REAL-LIFE ANALOGY (BEST ONE)
+🔔 REAL-LIFE ANALOGY
 ===========================================================
 
-Doorbell Example:
+Doorbell analogy:
 -----------------
-1️⃣ Someone presses doorbell
-2️⃣ Bell rings
-3️⃣ Different people react differently
+- Bell rings (event)
+- People react differently
+- Bell doesn’t wait for confirmation
 
-- Parents open door
-- Dog starts barking
-- Baby wakes up
-
-👉 Bell doesn’t know who reacts  
-👉 Same event, multiple reactions
+👉 If reactions are important → use ACK-based system  
+👉 If not → fire-and-forget is acceptable
 
 ===========================================================
-⚠️ IMPORTANT NOTE (VERY COMMON CONFUSION)
+⚠️ IMPORTANT NOTE (COMMON CONFUSION)
 ===========================================================
 
-✔ Event-Driven Model usually uses **Pub/Sub internally**
-✔ Pub/Sub = **message delivery mechanism**
-✔ Event-Driven = **system design philosophy**
-
-👉 Pub/Sub answers: "How messages are delivered?"
-👉 Event-Driven answers: "How system behaves?"
+✔ Event-Driven = **architecture style**
+✔ Pub/Sub / Queue = **delivery mechanism**
+✔ ACK = **broker responsibility**, not EDA itself
 
 ===========================================================
 ✅ ADVANTAGES
 ===========================================================
 
-✅ 1. Loose Coupling  
-- Services don’t depend on each other
-- Easy to add/remove services
-
-✅ 2. High Scalability  
-- New consumers can be added anytime
-- No change needed in producer
-
-✅ 3. Real-Time Responsiveness  
-- Services react instantly to events
-
-✅ 4. Resilience  
-- Failure of one service does NOT stop others
-
-✅ 5. Event Replay  
-- Stored events can be replayed to rebuild state
+✅ Loose coupling  
+✅ High scalability  
+✅ Real-time reactions  
+✅ Independent services  
+✅ Event replay (if broker supports it)
 
 ===========================================================
 ❌ DISADVANTAGES
 ===========================================================
 
-❌ 1. Event Ordering  
-- Maintaining correct sequence is hard
-
-❌ 2. Debugging Difficulty  
-- Async flows are hard to trace
-
-❌ 3. Increased Complexity  
-- Needs brokers, monitoring, tracing
-
-❌ 4. Latency  
-- Multiple async hops may add delay
-
-❌ 5. Access Control  
-- Restricting who consumes which events needs extra setup
+❌ ACK behavior is broker-dependent  
+❌ Possible duplicates (with retries)  
+❌ Hard debugging & tracing  
+❌ Ordering complexity  
 
 ===========================================================
 📌 BEST USE CASES
@@ -232,15 +235,15 @@ Doorbell Example:
 2️⃣ Real-time systems  
 3️⃣ Streaming & analytics  
 4️⃣ IoT & sensor systems  
-5️⃣ Highly scalable distributed systems
+5️⃣ Highly scalable distributed systems  
 
 ===========================================================
-🏁 INTERVIEW-READY SUMMARY (2-LINES)
+🏁 INTERVIEW-SAFE SUMMARY
 ===========================================================
 
-“In Event-Driven Architecture, services emit and react to events 
-asynchronously via an event bus like Kafka or RabbitMQ.  
-It improves scalability and decoupling but makes ordering and debugging harder.”
+“In Event-Driven Architecture, services emit and react to events asynchronously.
+Acknowledgment and retries depend on the event broker—systems like Kafka support ACKs,
+while simpler event systems may be fire-and-forget.”
 ===========================================================
 */
 
@@ -251,14 +254,13 @@ It improves scalability and decoupling but makes ordering and debugging harder.�
 
 Event-Driven:
 👉 Publish event when something happens
-👉 No waiting for response
+👉 No direct waiting
 👉 Asynchronous
+👉 ACK depends on broker
 
 Request-Response:
 👉 Ask for data/action
 👉 Wait for response
 👉 Synchronous
-
-⚠️ Event-Driven systems often use Pub/Sub internally
 ===========================================================
 */
