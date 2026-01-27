@@ -1,0 +1,147 @@
+<!-- 
+====================================================================================================
+🌐 COMPLETE REQUEST FLOW — DECISION BASED SYSTEM DESIGN
+( HOW REGION, LOAD BALANCER & SERVERS ARE CHOSEN )
+====================================================================================================
+
+This file focuses ONLY on:
+✔ How traffic is routed
+✔ How region is selected
+✔ How best server is chosen
+✔ How failures are handled
+✔ How L4 vs L7 decide routing
+
+(No subnet / VPC / infra theory here)
+
+====================================================================================================
+🧠 BIG PICTURE (REMEMBER THIS)
+====================================================================================================
+
+User request goes through MULTIPLE decision points.
+
+Each layer answers ONE QUESTION:
+
+DNS / Global LB   → Which REGION?
+L4 Load Balancer  → Which CONNECTION target?
+L7 Load Balancer  → Which APPLICATION / SERVER?
+Service Layer    → Which INSTANCE?
+Retry Logic      → What if it fails?
+
+
+
+====================================================================================================
+4️⃣ SERVICE INSTANCE SELECTION (INSIDE SERVICE)
+====================================================================================================
+
+Question answered:
+------------------
+👉 Which INSTANCE of this service should handle the request?
+
+----------------------------------------------------------------------------------------------------
+📌 HOW SERVICE INSTANCE IS CHOSEN
+----------------------------------------------------------------------------------------------------
+
+1️⃣ ROUND ROBIN (MOST COMMON)
+----------------------------
+
+2️⃣ LEAST LOADED INSTANCE
+-------------------------
+- CPU / Memory based
+
+3️⃣ SESSION AFFINITY (OPTIONAL)
+-------------------------------
+- Same user → same instance
+
+----------------------------------------------------------------------------------------------------
+📊 INSTANCE SELECTION FLOW
+----------------------------------------------------------------------------------------------------
+
+Request enters service pool
+ ↓
+Check healthy instances
+ ↓
+Pick best instance
+ ↓
+Process request
+
+====================================================================================================
+5️⃣ FAILURE HANDLING & RETRIES (VERY IMPORTANT)
+====================================================================================================
+
+Failures can happen at ANY layer.
+
+----------------------------------------------------------------------------------------------------
+📌 FAILURE DECISION RULES
+----------------------------------------------------------------------------------------------------
+
+DNS LEVEL:
+----------
+- If region DOWN → choose next best region
+
+L4 LEVEL:
+---------
+- If server fails → retry on another server
+
+L7 LEVEL:
+---------
+- If service returns 5xx → retry (if safe)
+
+SERVICE LEVEL:
+--------------
+- Timeout → retry
+- Circuit breaker opens → stop sending traffic
+
+----------------------------------------------------------------------------------------------------
+📊 FAILURE FLOW
+----------------------------------------------------------------------------------------------------
+
+Request
+ ↓
+Failure detected ❌
+ ↓
+Is retry safe?
+ ↓
+Yes → Retry next instance
+No  → Return error
+
+====================================================================================================
+6️⃣ COMPLETE DECISION FLOW (END TO END)
+====================================================================================================
+
+User
+ ↓
+DNS → Choose best REGION (latency + health)
+ ↓
+L4 LB → Choose best TCP target
+ ↓
+L7 LB → Choose correct SERVICE
+ ↓
+Service LB → Choose best INSTANCE
+ ↓
+Process request
+ ↓
+Response returned
+
+====================================================================================================
+🧠 FINAL MEMORY TRICK (INTERVIEW GOLD)
+====================================================================================================
+
+DNS   → WHERE (region)
+L4    → WHICH connection
+L7    → WHICH service
+Svc   → WHICH instance
+Retry → WHAT if failure
+
+====================================================================================================
+🎤 INTERVIEW ONE-LINER
+====================================================================================================
+
+“A client request is first routed to the best region using DNS based on latency and health,
+then distributed by an L4 load balancer at the connection level, routed by an L7 load balancer
+using HTTP semantics, processed by the best available service instance, and retried safely
+in case of failures.”
+
+====================================================================================================
+END OF FILE
+====================================================================================================
+*/

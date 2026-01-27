@@ -1,0 +1,119 @@
+<!--
+====================================================================================================
+2️⃣ TRAFFIC ENTERS REGION → L4 LOAD BALANCER
+====================================================================================================
+
+📌 WHAT HAPPENS JUST BEFORE THIS STEP (IMPORTANT CONTEXT)
+----------------------------------------------------------------------------------------------------
+After DNS resolution:
+- DNS returns an IP address (region entry point)
+- Client establishes a TCP connection to that IP
+
+👉 The FIRST logical component that processes this connection
+inside the region is the **L4 Load Balancer**
+
+====================================================================================================
+📌 ROLE OF L4 LOAD BALANCER
+====================================================================================================
+
+Question L4 answers:
+--------------------
+👉 Which BACKEND CONNECTION should receive this TCP request?
+
+L4 Load Balancer works at:
+--------------------------
+✔ Transport Layer (TCP / UDP)
+
+L4 Load Balancer does NOT:
+--------------------------
+❌ Understand HTTP
+❌ Read URL paths
+❌ Inspect headers or cookies
+❌ Make application-level decisions
+
+====================================================================================================
+🔁 WHAT L4 LOAD BALANCER ACTUALLY DOES
+====================================================================================================
+
+- Accepts incoming TCP connections
+- Selects ONE healthy backend server or Data Center.
+- Forwards the **entire TCP stream**
+- Maintains connection until it closes
+
+👉 L4 is FAST and LIGHTWEIGHT
+
+====================================================================================================
+📌 HOW L4 LOAD BALANCER CHOOSES SERVER
+====================================================================================================
+
+1️⃣ ROUND ROBIN
+--------------
+- Server A
+- Server B
+- Server C
+- Repeat
+
+--------------------------------------------------
+
+2️⃣ LEAST CONNECTIONS
+--------------------
+- Chooses server with the fewest active TCP connections
+
+--------------------------------------------------
+
+3️⃣ HASH-BASED ROUTING (5-TUPLE HASH)
+------------------------------------
+Decision based on:
+- Source IP
+- Destination IP
+- Source Port
+- Destination Port
+- Protocol
+
+Used for:
+✔ Connection stickiness
+
+--------------------------------------------------
+
+4️⃣ HEALTH CHECK FILTERING
+-------------------------
+❌ Unhealthy server is REMOVED
+✔ Only healthy servers receive traffic
+
+====================================================================================================
+📊 L4 LOAD BALANCER DECISION FLOW
+====================================================================================================
+
+Incoming TCP connection
+        ↓
+Check list of healthy servers
+        ↓
+Apply selection algorithm
+        ↓
+Select ONE backend server
+        ↓
+Forward TCP stream
+        ↓
+Maintain connection
+
+====================================================================================================
+🧠 KEY TAKEAWAYS
+====================================================================================================
+
+✔ L4 is the first logical component after DNS
+✔ L4 operates before HTTP exists
+✔ L4 does NOT terminate TLS (usually)
+✔ L4 only forwards TCP/UDP packets
+
+====================================================================================================
+🎤 INTERVIEW-SAFE ONE-LINER
+====================================================================================================
+
+“After DNS resolution, the client establishes a TCP connection to the resolved IP.
+The L4 load balancer is the first logical component that handles this connection,
+distributing it to a healthy backend using transport-layer algorithms.”
+
+====================================================================================================
+END OF TRAFFIC ENTERS REGION STAGE
+====================================================================================================
+-->

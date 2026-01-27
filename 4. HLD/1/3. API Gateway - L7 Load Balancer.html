@@ -1,0 +1,225 @@
+<!--
+====================================================================================================
+3️⃣ API GATEWAY / L7 LOAD BALANCER (APPLICATION ROUTING STAGE)
+====================================================================================================
+
+📌 PURPOSE OF THIS STAGE
+----------------------------------------------------------------------------------------------------
+Handle HTTP/HTTPS traffic and make APPLICATION-LEVEL decisions such as:
+- Which service should handle the request?
+- Is the request allowed?
+- Should the request be routed, blocked, or rate-limited?
+
+This stage works ONLY after:
+✔ DNS resolution
+✔ TCP connection handling by L4 Load Balancer
+
+====================================================================================================
+📍 WHERE API GATEWAY EXISTS
+====================================================================================================
+
+API Gateway / L7 Load Balancer exists:
+-------------------------------------
+✔ Inside the selected REGION
+✔ After L4 Load Balancer
+✔ At the HTTP entry point of the system
+
+Common implementations:
+-----------------------
+- AWS ALB / API Gateway
+- Azure Application Gateway
+- GCP HTTP(S) Load Balancer
+- NGINX / Envoy / HAProxy
+
+👉 API Gateway ≈ L7 Load Balancer
+
+====================================================================================================
+🧠 WHAT ARRIVES AT THIS STAGE
+====================================================================================================
+
+At this point:
+--------------
+✔ TCP connection already established
+✔ TLS handshake completed (HTTPS)
+✔ Full HTTP request is available
+
+Example HTTP request:
+---------------------
+GET /cosmos/orders
+Headers:
+- Authorization: Bearer token
+- Content-Type: application/json
+
+====================================================================================================
+❓ QUESTIONS API GATEWAY ANSWERS
+====================================================================================================
+
+👉 Which SERVICE should handle this request?
+👉 Is the request AUTHORIZED?
+👉 Has the client exceeded RATE LIMITS?
+👉 Should this request be BLOCKED or ALLOWED?
+
+====================================================================================================
+🚦 WHAT API GATEWAY DOES
+====================================================================================================
+
+✔ Terminates HTTPS (SSL/TLS)
+✔ Inspects HTTP request
+✔ Applies routing rules
+✔ Applies security policies
+✔ Forwards request to correct service pool
+
+====================================================================================================
+📌 HOW API GATEWAY ROUTES REQUESTS
+====================================================================================================
+
+1️⃣ PATH-BASED ROUTING
+---------------------
+/cosmos   → Cosmos Service
+/refserve → Refserve Service
+/know     → Know Service
+
+--------------------------------------------------
+
+2️⃣ HOST-BASED ROUTING
+---------------------
+api.goq.com   → API Service
+admin.goq.com → Admin Service
+
+--------------------------------------------------
+
+3️⃣ HEADER-BASED ROUTING
+-----------------------
+- Canary releases
+- A/B testing
+- Version routing
+
+--------------------------------------------------
+
+4️⃣ METHOD-BASED ROUTING
+-----------------------
+GET  → Read service
+POST → Write service
+
+====================================================================================================
+🛡️ SECURITY AT API GATEWAY
+====================================================================================================
+
+API Gateway can enforce:
+------------------------
+✔ Authentication (JWT, OAuth)
+✔ Authorization
+✔ Rate limiting
+✔ Request validation
+
+⚠️ WAF is usually ATTACHED here
+- Inspects payload for attacks
+- Blocks malicious requests
+
+====================================================================================================
+📊 API GATEWAY DECISION FLOW
+====================================================================================================
+
+HTTP Request
+     ↓
+TLS Termination
+     ↓
+Authentication & Authorization
+     ↓
+Rate Limiting / WAF checks
+     ↓
+Routing Rule Match
+     ↓
+Forward to Target Service Pool
+
+====================================================================================================
+🧠 WHAT API GATEWAY DOES NOT DO
+====================================================================================================
+
+❌ Does NOT choose region
+❌ Does NOT balance raw TCP connections
+❌ Does NOT execute business logic
+❌ Does NOT store application data
+
+====================================================================================================
+🔁 WHAT HAPPENS AFTER THIS STAGE
+====================================================================================================
+
+Once service is chosen:
+-----------------------
+✔ Request is forwarded to the appropriate application service
+✔ Service-level load balancing takes over
+✔ Business logic executes
+
+👉 Next stage:
+**Service / Application Layer**
+
+====================================================================================================
+🧠 FINAL MEMORY TRICK
+====================================================================================================
+
+DNS  → WHERE (region)
+L4   → WHICH connection
+L7   → WHICH service   ← API Gateway
+APP  → WHAT logic
+
+====================================================================================================
+🎤 INTERVIEW-SAFE ONE-LINER
+====================================================================================================
+
+“After traffic is distributed by the L4 load balancer, it reaches the API Gateway or L7 load
+balancer, which performs HTTP-level routing, security checks, and forwards the request to the
+appropriate application service.”
+-->
+
+
+<!-- 
+📌 TLS TERMINATION (SHORT NOTES) :
+--------------------------------
+
+TLS termination = decrypting HTTPS at a gateway/load balancerso the request can be read and processed.
+
+WHY IT IS NEEDED:
+-----------------
+- HTTPS traffic is encrypted
+- Components like API Gateway / L7 Load Balancer must:
+  ✔ Read URL
+  ✔ Read headers
+  ✔ Apply routing & security rules
+
+WHERE TLS TERMINATION HAPPENS:
+------------------------------
+✔ API Gateway
+✔ L7 Load Balancer
+✔ WAF (attached to L7)
+
+❌ L4 Load Balancer does NOT terminate TLS
+
+HOW IT WORKS (SIMPLE FLOW):
+---------------------------
+Client (HTTPS 🔒)
+   ↓
+API Gateway / L7 LB  ← TLS terminated here
+   ↓
+Backend Service (HTTP or re-encrypted HTTPS)
+
+TWO COMMON PATTERNS:
+--------------------
+1️⃣ TLS Termination Only
+   - Gateway decrypts
+   - Backend receives HTTP
+   - Faster, common
+
+2️⃣ TLS Termination + Re-Encryption
+   - Gateway decrypts
+   - Gateway re-encrypts to backend
+   - Used for high-security systems
+
+KEY TAKEAWAY:
+-------------
+👉 Any component that needs to inspect HTTP
+👉 must terminate TLS
+
+INTERVIEW ONE-LINER:
+--------------------
+“TLS termination is the process of decrypting HTTPS traffic at an API gateway or L7 load balancer so the request can be inspected and routed.”
