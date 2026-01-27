@@ -8,6 +8,10 @@ Note : The publisher and subscriber do not directly communicate with each other,
        they don't know about each other,
        making the system loosely coupled and scalable.
 
+What it means :
+---------------
+👉 Sender doesn’t know who receives the message
+    Publisher → Topic → Subscribers
 
 -----------------------------------------------------------
 🧩 COMPONENTS:
@@ -68,7 +72,20 @@ c. Subscribers Receive Messages
                               └─────┘         └────────┘
                               (5) Processes the Message
 
+Example : Kafka, Redis Pub/Sub, AWS SNS
+---------
 
+Real-life analogy :
+-----------------   📺 YouTube
+a. Creator uploads video
+b. Subscribers get notification
+c. Creator doesn’t know who watched
+
+Key points
+-----------
+✅ Loose coupling
+✅ Scales well
+❌ Harder to debug
 
 
 Advantages:
