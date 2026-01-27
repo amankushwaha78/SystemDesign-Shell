@@ -1,0 +1,128 @@
+<!--
+====================================================================================================
+4️⃣ SERVICE LAYER & INSTANCE SELECTION
+====================================================================================================
+
+📌 PURPOSE OF THIS STAGE
+----------------------------------------------------------------------------------------------------
+Process the business logic and decide:
+👉 Which INSTANCE of a service should handle the request?
+
+This stage happens AFTER:
+✔ DNS resolution
+✔ L4 Load Balancer
+✔ API Gateway / L7 Routing
+
+====================================================================================================
+📍 WHERE SERVICE LAYER EXISTS
+====================================================================================================
+
+✔ Inside the selected region
+✔ Behind API Gateway / L7 Load Balancer
+✔ Usually runs as:
+  - VMs
+  - Containers (Docker)
+  - Pods (Kubernetes)
+
+Examples:
+- Order Service
+- Payment Service
+- User Service
+
+====================================================================================================
+🧠 WHAT ARRIVES AT THIS STAGE
+====================================================================================================
+
+✔ Fully decrypted HTTP request
+✔ Already authenticated & authorized
+✔ Already routed to correct SERVICE
+
+Example:
+--------
+/cosmos/orders → Cosmos Order Service
+
+====================================================================================================
+❓ QUESTION THIS STAGE ANSWERS
+====================================================================================================
+
+👉 Which INSTANCE of this service should process the request?
+
+====================================================================================================
+📌 HOW SERVICE INSTANCE IS CHOSEN
+====================================================================================================
+
+1️⃣ ROUND ROBIN
+--------------
+- Request goes to next instance in order
+
+--------------------------------------------------
+
+2️⃣ LEAST LOADED
+----------------
+- Instance with lowest CPU / memory / requests
+
+--------------------------------------------------
+
+3️⃣ SESSION AFFINITY (OPTIONAL)
+-------------------------------
+- Same user → same instance
+- Used when stateful behavior is needed
+
+--------------------------------------------------
+
+4️⃣ HEALTH CHECK FILTERING
+-------------------------
+❌ Unhealthy instance removed
+✔ Only healthy instances receive traffic
+
+====================================================================================================
+📊 SERVICE INSTANCE SELECTION FLOW
+====================================================================================================
+
+Request enters service pool
+        ↓
+Filter healthy instances
+        ↓
+Apply selection strategy
+        ↓
+Choose ONE instance
+        ↓
+Execute business logic
+
+====================================================================================================
+🧠 WHAT SERVICE LAYER DOES
+====================================================================================================
+
+✔ Executes business logic
+✔ Calls databases
+✔ Calls other services
+✔ Produces events / messages (optional)
+
+====================================================================================================
+🧠 WHAT SERVICE LAYER DOES NOT DO
+====================================================================================================
+
+❌ Does NOT choose region
+❌ Does NOT handle TLS termination
+❌ Does NOT perform global routing
+
+====================================================================================================
+🧠 FINAL MEMORY TRICK
+====================================================================================================
+
+DNS  → WHERE (region)
+L4   → WHICH connection
+L7   → WHICH service
+SVC  → WHICH instance   ← YOU ARE HERE
+
+====================================================================================================
+🎤 INTERVIEW-SAFE ONE-LINER
+====================================================================================================
+
+“After routing through the API gateway, the service layer selects a healthy instance
+using strategies like round-robin or least-loaded and executes the core business logic.”
+
+====================================================================================================
+END OF SERVICE LAYER STAGE
+====================================================================================================
+-->
