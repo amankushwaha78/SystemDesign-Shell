@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>dash.js + WebSocket Demo</title>
+
+  <!-- dash.js CDN -->
+  <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    video {
+      width: 640px;
+      height: 360px;
+      background: black;
+    }
+    #logs {
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      height: 150px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>dash.js with WebSocket Integration</h2>
+
+  <!-- Video Player -->
+  <!-- <video id="videoPlayer" controls></video> -->
+  <video id="videoPlayer" controls muted></video>
+
+
+  <div id="logs"></div>
+
+  <script>
+    /****************************************************
+     * 1️⃣ Initialize dash.js Player
+     ****************************************************/
+    const video = document.getElementById("videoPlayer");
+
+    // Public DASH sample stream
+    const dashUrl =
+      "https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd";
+
+    const player = dashjs.MediaPlayer().create();
+    player.initialize(video, dashUrl, false);
+
+    log("dash.js player initialized");
+
+    /****************************************************
+     * 2️⃣ Initialize WebSocket Connection
+     ****************************************************/
+    // Public echo WebSocket (for demo purpose)
+    const socket = new WebSocket("wss://echo.websocket.events");
+
+    socket.onopen = () => {
+      log("WebSocket connected");
+
+      // Send demo commands
+      socket.send(JSON.stringify({ action: "play" }));
+
+      setTimeout(() => {
+        socket.send(JSON.stringify({ action: "pause" }));
+      }, 5000);
+
+      setTimeout(() => {
+        socket.send(JSON.stringify({ action: "play" }));
+      }, 8000);
+    };
+
+    socket.onmessage = (event) => {
+      log("WebSocket message: " + event.data);
+
+      const message = JSON.parse(event.data);
+
+      // Control dash.js via WebSocket messages
+      if (message.action === "play") {
+        video.play();
+        log("Video play triggered via WebSocket");
+      }
+
+      if (message.action === "pause") {
+        video.pause();
+        log("Video pause triggered via WebSocket");
+      }
+
+      if (message.action === "seek") {
+        video.currentTime = message.time;
+        log("Seek to " + message.time + " seconds");
+      }
+    };
+
+    socket.onerror = (error) => {
+      log("WebSocket error");
+      console.error(error);
+    };
+
+    socket.onclose = () => {
+      log("WebSocket disconnected");
+    };
+
+    /****************************************************
+     * 3️⃣ Helper Function
+     ****************************************************/
+    function log(message) {
+      const logs = document.getElementById("logs");
+      const line = document.createElement("div");
+      line.textContent = message;
+      logs.appendChild(line);
+      logs.scrollTop = logs.scrollHeight;
+    }
+  </script>
+
+</body>
+</html>
