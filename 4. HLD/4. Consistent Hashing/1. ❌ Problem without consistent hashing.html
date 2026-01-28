@@ -11,6 +11,8 @@ In a traditional modulo-based hashing system for Load Balancing:
 
     If there are N servers, a key (request) is assigned to a server using:
     [ server_index where request will go = hash(key) % N ]
+                             serverIndex = hash(key) % numberOfServers
+
 
 When a server is added or removed, almost all keys need to be remapped, causing high overhead.
 Consistent Hashing solves this problem by minimizing remapping when the number of servers changes.
